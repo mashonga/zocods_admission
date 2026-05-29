@@ -6,7 +6,7 @@
 </head>
 <body style="font-family: Arial, Helvetica, sans-serif; background: #f5f7fb; margin: 0; padding: 30px;">
     <div style="max-width: 700px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden;">
-        <div style="background: #0b3d91; color: white; padding: 24px 28px;">
+        <div style="background: #16a34a; color: white; padding: 24px 28px;">
             <h1 style="margin: 0; font-size: 24px;">Zomba College of Development Studies</h1>
             <p style="margin: 8px 0 0;">Application Status Update</p>
         </div>

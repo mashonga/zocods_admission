@@ -22,7 +22,7 @@
         }
 
         .navbar {
-            background: #0b3d91;
+            background: #16a34a;
             color: white;
             padding: 14px 40px;
             display: flex;
@@ -30,6 +30,10 @@
             align-items: center;
             gap: 20px;
             flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .brand {
@@ -39,11 +43,12 @@
         }
 
         .brand img {
-            width: 54px;
-            height: 54px;
+            width: 56px;
+            height: 56px;
             object-fit: cover;
             border-radius: 50%;
             background: white;
+            border: 2px solid rgba(255,255,255,0.35);
         }
 
         .brand-text h1 {
@@ -53,9 +58,9 @@
         }
 
         .brand-text p {
-            margin: 2px 0 0;
+            margin: 3px 0 0;
             font-size: 12px;
-            color: #dbeafe;
+            color: #dcfce7;
         }
 
         .nav-links {
@@ -80,7 +85,7 @@
         .page-header h2 {
             margin: 0 0 12px;
             font-size: 42px;
-            color: #0b3d91;
+            color: #16a34a;
         }
 
         .page-header p {
@@ -115,7 +120,7 @@
 
         .panel h3 {
             margin-top: 0;
-            color: #0b3d91;
+            color: #16a34a;
             font-size: 24px;
         }
 
@@ -136,7 +141,7 @@
         .form-card h3 {
             margin-top: 0;
             margin-bottom: 22px;
-            color: #0b3d91;
+            color: #16a34a;
             font-size: 28px;
         }
 
@@ -182,6 +187,13 @@
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            color: #64748b;
         }
 
         .success-box {
@@ -296,12 +308,12 @@
                 <div class="form-grid">
                     <div>
                         <label for="full_name">Full Name</label>
-                        <input type="text" id="full_name" name="full_name" value="{{ old('full_name') }}" placeholder="Enter full name">
+                        <input type="text" id="full_name" name="full_name" value="{{ old('full_name') }}" placeholder="Enter full name" required>
                     </div>
 
                     <div>
                         <label for="gender">Gender</label>
-                        <select id="gender" name="gender">
+                        <select id="gender" name="gender" required>
                             <option value="">Select gender</option>
                             <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
                             <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
@@ -310,59 +322,117 @@
 
                     <div>
                         <label for="date_of_birth">Date of Birth</label>
-                        <input type="date" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth') }}">
+                        <input type="date" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth') }}" required>
+                    </div>
+
+                    <div>
+                        <label for="marital_status">Marital Status</label>
+                        <select id="marital_status" name="marital_status" required>
+                            <option value="">Select status</option>
+                            <option value="Single" {{ old('marital_status') == 'Single' ? 'selected' : '' }}>Single</option>
+                            <option value="Married" {{ old('marital_status') == 'Married' ? 'selected' : '' }}>Married</option>
+                            <option value="Divorced" {{ old('marital_status') == 'Divorced' ? 'selected' : '' }}>Divorced</option>
+                            <option value="Widowed" {{ old('marital_status') == 'Widowed' ? 'selected' : '' }}>Widowed</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="nationality">Nationality</label>
+                        <input type="text" id="nationality" name="nationality" value="{{ old('nationality') }}" placeholder="Enter nationality" required>
+                    </div>
+
+                    <div>
+                        <label for="district">Home District</label>
+                        <input type="text" id="district" name="district" value="{{ old('district') }}" placeholder="Enter home district" required>
                     </div>
 
                     <div>
                         <label for="phone">Phone Number</label>
-                        <input type="text" id="phone" name="phone" value="{{ old('phone') }}" placeholder="Enter phone number">
+                        <input type="text" id="phone" name="phone" value="{{ old('phone') }}" placeholder="Enter phone number" required>
                     </div>
 
                     <div>
                         <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="Enter email address">
+                        <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="Enter email address" required>
                     </div>
 
                     <div>
                         <label for="program">Program Applying For</label>
-                        <select id="program" name="program">
+                        <select id="program" name="program" required>
                             <option value="">Select a program</option>
-                            <option value="Public Health" {{ old('program') == 'Public Health' ? 'selected' : '' }}>Public Health</option>
-                            <option value="Nutrition and Food Security" {{ old('program') == 'Nutrition and Food Security' ? 'selected' : '' }}>Nutrition and Food Security</option>
-                            <option value="Professional Diploma in Education" {{ old('program') == 'Professional Diploma in Education' ? 'selected' : '' }}>Professional Diploma in Education</option>
-                            <option value="Community Development" {{ old('program') == 'Community Development' ? 'selected' : '' }}>Community Development</option>
-                            <option value="Social Work" {{ old('program') == 'Social Work' ? 'selected' : '' }}>Social Work</option>
-                            <option value="Business Administration" {{ old('program') == 'Business Administration' ? 'selected' : '' }}>Business Administration</option>
-                            <option value="Human Resource Management" {{ old('program') == 'Human Resource Management' ? 'selected' : '' }}>Human Resource Management</option>
-                            <option value="Hotel and Hospitality Management" {{ old('program') == 'Hotel and Hospitality Management' ? 'selected' : '' }}>Hotel and Hospitality Management</option>
-                            <option value="ICT" {{ old('program') == 'ICT' ? 'selected' : '' }}>ICT</option>
-                            <option value="Environmental Science" {{ old('program') == 'Environmental Science' ? 'selected' : '' }}>Environmental Science</option>
+                            @foreach ($programs as $program)
+                                <option value="{{ $program->name }}" {{ old('program') == $program->name ? 'selected' : '' }}>{{ $program->name }}</option>
+                            @endforeach
                         </select>
                     </div>
 
                     <div class="full-width">
                         <label for="address">Home Address</label>
-                        <textarea id="address" name="address" placeholder="Enter home address">{{ old('address') }}</textarea>
+                        <textarea id="address" name="address" placeholder="Enter home address" required>{{ old('address') }}</textarea>
+                    </div>
+
+                    <div class="full-width">
+                        <label for="postal_address">Postal Address</label>
+                        <textarea id="postal_address" name="postal_address" placeholder="Enter postal address" required>{{ old('postal_address') }}</textarea>
+                    </div>
+
+                    <div>
+                        <label for="occupation">Occupation</label>
+                        <input type="text" id="occupation" name="occupation" value="{{ old('occupation') }}" placeholder="Enter your occupation" required>
+                    </div>
+
+                    <div>
+                        <label for="employer">Employer</label>
+                        <input type="text" id="employer" name="employer" value="{{ old('employer') }}" placeholder="Enter employer name (if applicable)">
+                    </div>
+
+                    <div>
+                        <label for="sponsor">Sponsor</label>
+                        <input type="text" id="sponsor" name="sponsor" value="{{ old('sponsor') }}" placeholder="Who is sponsoring your education?" required>
+                    </div>
+
+                    <div>
+                        <label for="sponsor_phone">Sponsor Phone</label>
+                        <input type="text" id="sponsor_phone" name="sponsor_phone" value="{{ old('sponsor_phone') }}" placeholder="Sponsor's phone number" required>
                     </div>
 
                     <div>
                         <label for="highest_qualification">Highest Qualification</label>
-                        <input type="text" id="highest_qualification" name="highest_qualification" value="{{ old('highest_qualification') }}" placeholder="Enter highest qualification">
+                        <input type="text" id="highest_qualification" name="highest_qualification" value="{{ old('highest_qualification') }}" placeholder="Enter highest qualification" required>
+                    </div>
+
+                    <div>
+                        <label for="exam_board">Exam Board</label>
+                        <select id="exam_board" name="exam_board" required>
+                            <option value="">Select an exam board</option>
+                            @php
+                                $boards = \App\Models\ExamBoard::orderBy('name')->get();
+                            @endphp
+                            @foreach($boards as $board)
+                                <option value="{{ $board->name }}" {{ old('exam_board') == $board->name ? 'selected' : '' }}>{{ $board->name }}</option>
+                            @endforeach
+                            <option value="Other" {{ old('exam_board') == 'Other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="full-width">
+                        <label for="other_qualifications">Other Qualifications</label>
+                        <textarea id="other_qualifications" name="other_qualifications" placeholder="List any other qualifications" required>{{ old('other_qualifications') }}</textarea>
                     </div>
 
                     <div>
                         <label for="previous_school">Previous School / Institution</label>
-                        <input type="text" id="previous_school" name="previous_school" value="{{ old('previous_school') }}" placeholder="Enter previous school or institution">
+                        <input type="text" id="previous_school" name="previous_school" value="{{ old('previous_school') }}" placeholder="Enter previous school or institution" required>
                     </div>
 
                     <div>
                         <label for="certificate_file">Certificate / Results Slip</label>
-                        <input type="file" id="certificate_file" name="certificate_file">
+                        <input type="file" id="certificate_file" name="certificate_file" required>
                     </div>
 
                     <div>
                         <label for="id_file">National ID / Passport Copy</label>
-                        <input type="file" id="id_file" name="id_file">
+                        <input type="file" id="id_file" name="id_file" required>
                     </div>
 
                     <div class="full-width">
@@ -370,8 +440,15 @@
                         <textarea id="message" name="message" placeholder="Optional extra details">{{ old('message') }}</textarea>
                     </div>
 
+                    <div class="full-width" style="margin-top: 10px;">
+                        <label style="display: flex; align-items: center; gap: 10px; font-weight: normal; cursor: pointer;">
+                            <input type="checkbox" id="agreed" name="agreed" value="1" style="width: auto; height: 18px; margin: 0;" required onchange="document.getElementById('submit-btn').disabled = !this.checked;">
+                            I declare that the information provided is true and correct.
+                        </label>
+                    </div>
+
                     <div class="full-width">
-                        <button type="submit" class="submit-btn">Submit Application</button>
+                        <button type="submit" id="submit-btn" class="submit-btn" disabled>Submit Application</button>
                     </div>
                 </div>
             </form>

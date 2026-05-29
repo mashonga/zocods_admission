@@ -2,10 +2,20 @@
 
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\ExamBoardController;
+use App\Http\Controllers\BoardFeeController;
+use App\Http\Controllers\IntakeController;
 use Illuminate\Support\Facades\Route;
 
+use App\Models\Program;
+
 Route::get('/', function () {
-    return view('home');
+    $programs = Program::where('is_active', true)
+        ->orderBy('sort_order')
+        ->get();
+
+    return view('home', compact('programs'));
 });
 
 Route::get('/apply', [ApplicationController::class, 'create']);
@@ -17,9 +27,34 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // Applications
     Route::get('/admin/applications', [ApplicationController::class, 'index']);
     Route::get('/admin/applications/{application}', [ApplicationController::class, 'show']);
     Route::post('/admin/applications/{application}/status', [ApplicationController::class, 'updateStatus']);
     Route::post('/admin/applications/{application}/delete', [ApplicationController::class, 'destroy']);
+
+    // Programs
+    Route::get('/admin/programs', [ProgramController::class, 'index']);
+    Route::get('/admin/programs/create', [ProgramController::class, 'create']);
+    Route::post('/admin/programs', [ProgramController::class, 'store']);
+    Route::get('/admin/programs/{program}/edit', [ProgramController::class, 'edit']);
+    Route::post('/admin/programs/{program}', [ProgramController::class, 'update']);
+    Route::post('/admin/programs/{program}/delete', [ProgramController::class, 'destroy']);
+
+    // Exam Boards
+    Route::get('/admin/exam-boards', [ExamBoardController::class, 'index']);
+    Route::post('/admin/exam-boards', [ExamBoardController::class, 'store']);
+    Route::post('/admin/exam-boards/{board}/delete', [ExamBoardController::class, 'destroy']);
+
+    // Board Fees
+    Route::get('/admin/board-fees', [BoardFeeController::class, 'index']);
+    Route::post('/admin/board-fees', [BoardFeeController::class, 'store']);
+    Route::post('/admin/board-fees/{fee}/delete', [BoardFeeController::class, 'destroy']);
+
+    // Intakes
+    Route::get('/admin/intakes', [IntakeController::class, 'index']);
+    Route::post('/admin/intakes', [IntakeController::class, 'store']);
+    Route::post('/admin/intakes/{intake}/delete', [IntakeController::class, 'destroy']);
+
     Route::post('/admin/logout', [AuthController::class, 'logout']);
 });

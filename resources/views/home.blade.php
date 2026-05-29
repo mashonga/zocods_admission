@@ -25,8 +25,33 @@
             text-decoration: none;
         }
 
+
+
+        .portal-pill {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 28px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 999px;
+            color: #16a34a;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+            cursor: pointer;
+        }
+
+        .portal-pill:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(22, 163, 74, 0.15);
+            border-color: #16a34a;
+            background: #f0fdf4;
+        }
+
         .navbar {
-            background: #0b3d91;
+            background: #16a34a;
             color: white;
             padding: 14px 40px;
             display: flex;
@@ -37,6 +62,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .brand {
@@ -63,7 +89,7 @@
         .brand-text p {
             margin: 3px 0 0;
             font-size: 12px;
-            color: #dbeafe;
+            color: #dcfce7;
         }
 
         .nav-links {
@@ -84,10 +110,11 @@
             color: white !important;
             padding: 10px 18px;
             border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(255,122,0,0.3);
         }
 
         .hero {
-            background: linear-gradient(rgba(11, 61, 145, 0.78), rgba(11, 61, 145, 0.78)),
+            background: linear-gradient(rgba(22, 163, 74, 0.82), rgba(21, 128, 61, 0.88)),
                         url('/images/hero.jpg') center/cover no-repeat;
             color: white;
         }
@@ -138,7 +165,7 @@
 
         .btn-secondary {
             background: white;
-            color: #0b3d91;
+            color: #16a34a;
         }
 
         .hero-image-box img {
@@ -158,7 +185,7 @@
         .section-title {
             margin: 0 0 12px;
             font-size: 38px;
-            color: #0b3d91;
+            color: #16a34a;
         }
 
         .section-subtitle {
@@ -185,7 +212,7 @@
 
         .panel h3 {
             margin-top: 0;
-            color: #0b3d91;
+            color: #16a34a;
             font-size: 24px;
         }
 
@@ -195,12 +222,26 @@
             gap: 20px;
         }
 
+        .program-link {
+            display: block;
+        }
+
         .program-card {
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 16px;
             padding: 22px;
             box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+            min-height: 86px;
+            display: flex;
+            align-items: center;
+        }
+
+        .program-link:hover .program-card {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.1);
+            border-color: #bfd3f5;
         }
 
         .program-card h4 {
@@ -227,7 +268,7 @@
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            background: #0b3d91;
+            background: #16a34a;
             color: white;
             display: inline-flex;
             align-items: center;
@@ -239,7 +280,7 @@
         .step h3 {
             margin-top: 0;
             margin-bottom: 10px;
-            color: #0b3d91;
+            color: #16a34a;
         }
 
         .highlight-grid {
@@ -259,7 +300,7 @@
         .highlight-text h3 {
             margin-top: 0;
             font-size: 34px;
-            color: #0b3d91;
+            color: #16a34a;
         }
 
         .highlight-text p {
@@ -275,7 +316,7 @@
         }
 
         .cta-box {
-            background: linear-gradient(135deg, #0b3d91, #0f4db6);
+            background: linear-gradient(135deg, #16a34a, #22c55e);
             color: white;
             border-radius: 18px;
             padding: 36px;
@@ -347,24 +388,24 @@
 </head>
 <body>
 
-    <div class="navbar">
-        <div class="brand">
-            <img src="/images/logo.png" alt="College Logo">
-            <div class="brand-text">
-                <h1>Zomba College of Development Studies</h1>
-                <p>Transforming your dreams into actions</p>
+        <div class="navbar">
+            <div class="brand">
+                <img src="/images/logo.png" alt="College Logo">
+                <div class="brand-text">
+                    <h1>Zomba College of Development Studies</h1>
+                    <p>Transforming your dreams into actions</p>
+                </div>
+            </div>
+
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="#about">About</a>
+                <a href="#programs">Programs</a>
+                <a href="#how-to-apply">How to Apply</a>
+                <a href="#contact">Contact</a>
+                <a href="/apply" class="nav-apply">Apply Now</a>
             </div>
         </div>
-
-        <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="#about">About</a>
-            <a href="#programs">Programs</a>
-            <a href="#how-to-apply">How to Apply</a>
-            <a href="#contact">Contact</a>
-            <a href="/apply" class="nav-apply">Apply Now</a>
-        </div>
-    </div>
 
     <section class="hero">
         <div class="hero-inner">
@@ -376,10 +417,7 @@
                     your details directly to the college for review.
                 </p>
 
-                <div class="hero-actions">
-                    <a href="/apply" class="btn-primary">Start Application</a>
-                    <a href="#programs" class="btn-secondary">Explore Programs</a>
-                </div>
+
             </div>
 
             <div class="hero-image-box">
@@ -387,6 +425,19 @@
             </div>
         </div>
     </section>
+
+    <div style="background: #f8fafc; padding: 40px 20px; border-bottom: 1px solid #e5e7eb;">
+        <div style="max-width: 1150px; margin: 0 auto; display: flex; gap: 24px; align-items: center; justify-content: center; flex-wrap: wrap;">
+            <a href="https://zomba-college-student-portal.netlify.app" target="_blank" class="portal-pill">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                Student Portal
+            </a>
+            <a href="https://zomba-college-lecture-portal.netlify.app" target="_blank" class="portal-pill">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Staff Portal
+            </a>
+        </div>
+    </div>
 
     <section class="section" id="about">
         <h2 class="section-title">About the College</h2>
@@ -421,16 +472,13 @@
         </p>
 
         <div class="program-grid">
-            <div class="program-card"><h4>Public Health</h4></div>
-            <div class="program-card"><h4>Nutrition and Food Security</h4></div>
-            <div class="program-card"><h4>Professional Diploma in Education</h4></div>
-            <div class="program-card"><h4>Community Development</h4></div>
-            <div class="program-card"><h4>Social Work</h4></div>
-            <div class="program-card"><h4>Business Administration</h4></div>
-            <div class="program-card"><h4>Human Resource Management</h4></div>
-            <div class="program-card"><h4>Hotel and Hospitality Management</h4></div>
-            <div class="program-card"><h4>ICT</h4></div>
-            <div class="program-card"><h4>Environmental Science</h4></div>
+            @foreach ($programs as $program)
+                <a class="program-link" href="/programs/{{ $program->slug }}">
+                    <div class="program-card">
+                        <h4>{{ $program->name }}</h4>
+                    </div>
+                </a>
+            @endforeach
         </div>
     </section>
 
@@ -444,7 +492,7 @@
             <div class="step">
                 <div class="step-number">1</div>
                 <h3>Select a Program</h3>
-                <p>Choose the course you want to apply for from the listed programs.</p>
+                <p>Review the program cards and open one to view more details before applying.</p>
             </div>
 
             <div class="step">
@@ -467,42 +515,6 @@
         </div>
     </section>
 
-    <section class="section">
-        <div class="highlight-grid">
-            <div class="highlight-image">
-                <img src="/images/hero.jpg" alt="College learning">
-            </div>
-
-            <div class="highlight-text">
-                <h3>Start your application with confidence</h3>
-                <p>
-                    This website gives applicants a more organized and professional experience than
-                    sending messages and files through WhatsApp.
-                </p>
-                <p>
-                    Everything important is presented in one place: programs, application steps,
-                    and the online form for submitting details.
-                </p>
-                <a href="/apply" class="btn-primary">Apply Now</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="cta">
-        <div class="cta-box">
-            <div>
-                <h3>Ready to apply?</h3>
-                <p>
-                    Begin your application today through the official online admissions form.
-                </p>
-            </div>
-
-            <div>
-                <a href="/apply" class="btn-secondary">Go to Application Form</a>
-            </div>
-        </div>
-    </section>
-
     <footer class="footer" id="contact">
         <div class="footer-inner">
             <div>
@@ -518,8 +530,8 @@
 
             <div>
                 <h4>Admissions</h4>
-                <p>Online application form available</p>
-                <p>Apply through the website</p>
+                <p>Online application available anytime</p>
+                <p><a href="/apply" style="color: white;">Apply Now</a></p>
             </div>
         </div>
     </footer>

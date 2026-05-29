@@ -49,7 +49,7 @@
         .brand h1 {
             margin: 0 0 8px;
             font-size: 26px;
-            color: #0b3d91;
+            color: #16a34a;
         }
 
         .brand p {
@@ -85,7 +85,7 @@
 
         .login-btn {
             width: 100%;
-            background: #0b3d91;
+            background: #16a34a;
             color: white;
             border: none;
             border-radius: 10px;
@@ -99,7 +99,7 @@
             display: block;
             margin-top: 18px;
             text-align: center;
-            color: #0b3d91;
+            color: #16a34a;
             text-decoration: none;
             font-weight: 700;
         }

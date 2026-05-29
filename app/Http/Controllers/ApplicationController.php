@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\ApplicationStatusUpdated;
 use App\Models\Application;
+use App\Models\Program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -11,24 +12,40 @@ class ApplicationController extends Controller
 {
     public function create()
     {
-        return view('apply');
+        $programs = Program::where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
+        return view('apply', compact('programs'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
-            'gender' => 'nullable|string|max:50',
-            'date_of_birth' => 'nullable|date',
+            'gender' => 'required|string|max:50',
+            'marital_status' => 'required|string|max:50',
+            'date_of_birth' => 'required|date',
+            'nationality' => 'required|string|max:255',
+            'district' => 'required|string|max:255',
             'phone' => 'required|string|max:50',
-            'email' => 'nullable|email|max:255',
+            'email' => 'required|email|max:255',
+            'address' => 'required|string',
+            'postal_address' => 'required|string',
             'program' => 'required|string|max:255',
-            'address' => 'nullable|string',
-            'highest_qualification' => 'nullable|string|max:255',
-            'previous_school' => 'nullable|string|max:255',
-            'certificate_file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:4096',
-            'id_file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:4096',
+            'occupation' => 'required|string|max:255',
+            'employer' => 'nullable|string|max:255',
+            'sponsor' => 'required|string|max:255',
+            'sponsor_phone' => 'required|string|max:50',
+            'exam_board' => 'required|string|max:255',
+            'highest_qualification' => 'required|string|max:255',
+            'other_qualifications' => 'required|string',
+            'previous_school' => 'required|string|max:255',
+            'certificate_file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:4096',
+            'id_file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:4096',
             'message' => 'nullable|string',
+            'agreed' => 'accepted',
         ]);
 
         if ($request->hasFile('certificate_file')) {
@@ -58,6 +75,8 @@ class ApplicationController extends Controller
 
         $applications = $query->latest()->get();
 
+        $programs = Application::select('program')->distinct()->orderBy('program')->pluck('program');
+
         $stats = [
             'total' => Application::count(),
             'submitted' => Application::where('status', 'Submitted')->count(),
@@ -66,7 +85,7 @@ class ApplicationController extends Controller
             'rejected' => Application::where('status', 'Rejected')->count(),
         ];
 
-        return view('admin.applications.index', compact('applications', 'stats'));
+        return view('admin.applications.index', compact('applications', 'stats', 'programs'));
     }
 
     public function show(Application $application)
