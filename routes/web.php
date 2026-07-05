@@ -58,3 +58,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/admin/logout', [AuthController::class, 'logout']);
 });
+// Application Routes
+Route::get('/apply', [App\Http\Controllers\ApplicationController::class, 'create'])->name('applications.create');
+Route::post('/apply', [App\Http\Controllers\ApplicationController::class, 'store'])->name('applications.store');
+

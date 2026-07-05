@@ -11,15 +11,19 @@ return new class extends Migration
         if (!Schema::hasTable('intake_programs')) {
             Schema::create('intake_programs', function (Blueprint $table) {
                 $table->id();
-                $table->foreignId('intake_id')->constrained('intakes')->cascadeOnDelete();
-                // programs.id is a uuid (managed by TypeORM on Supabase)
+                $table->uuid('intake_id');
                 $table->uuid('program_id');
-                $table->foreign('program_id')->references('id')->on('programs')->cascadeOnDelete();
-                $table->unsignedInteger('required_subject_count')->nullable();
-                $table->boolean('is_active')->default(true);
                 $table->timestamps();
 
-                $table->unique(['intake_id', 'program_id']);
+                $table->foreign('intake_id')
+                      ->references('id')
+                      ->on('intakes')
+                      ->cascadeOnDelete();
+                      
+                $table->foreign('program_id')
+                      ->references('id')
+                      ->on('programs')
+                      ->cascadeOnDelete();
             });
         }
     }

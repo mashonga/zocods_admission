@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Program;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProgramSeeder extends Seeder
@@ -11,29 +11,48 @@ class ProgramSeeder extends Seeder
     public function run(): void
     {
         $programs = [
-            ['name' => 'Public Health', 'duration' => null, 'sort_order' => 1],
-            ['name' => 'Nutrition and Food Security', 'duration' => null, 'sort_order' => 2],
-            ['name' => 'Professional Diploma in Education', 'duration' => null, 'sort_order' => 3],
-            ['name' => 'Community Development', 'duration' => null, 'sort_order' => 4],
-            ['name' => 'Social Work', 'duration' => null, 'sort_order' => 5],
-            ['name' => 'Business Administration', 'duration' => null, 'sort_order' => 6],
-            ['name' => 'Human Resource Management', 'duration' => null, 'sort_order' => 7],
-            ['name' => 'Hotel and Hospitality Management', 'duration' => null, 'sort_order' => 8],
-            ['name' => 'ICT', 'duration' => null, 'sort_order' => 9],
-            ['name' => 'Environmental Science', 'duration' => null, 'sort_order' => 10],
-            ['name' => 'Financial Accounting', 'duration' => null, 'sort_order' => 11],
+            ['name' => 'Bachelor of Science in Computer Science', 'duration' => '4 years'],
+            ['name' => 'Bachelor of Business Administration', 'duration' => '3 years'],
+            ['name' => 'Master of Science in Data Science', 'duration' => '2 years'],
+            ['name' => 'Bachelor of Arts in Graphic Design', 'duration' => '3 years'],
+            ['name' => 'Master of Business Administration (MBA)', 'duration' => '2 years'],
+            ['name' => 'Bachelor of Science in Nursing', 'duration' => '4 years'],
+            ['name' => 'Diploma in Information Technology', 'duration' => '1.5 years'],
+            ['name' => 'Bachelor of Laws (LLB)', 'duration' => '4 years'],
+            ['name' => 'Master of Public Health', 'duration' => '2 years'],
+            ['name' => 'Bachelor of Education', 'duration' => '3 years'],
+            ['name' => 'Bachelor of Engineering in Civil Engineering', 'duration' => '4 years'],
+            ['name' => 'Bachelor of Pharmacy', 'duration' => '4 years'],
+            ['name' => 'Bachelor of Science in Accounting', 'duration' => '3 years'],
+            ['name' => 'Bachelor of Arts in Psychology', 'duration' => '3 years'],
+            ['name' => 'Master of Information Technology', 'duration' => '2 years'],
+            ['name' => 'Diploma in Business Management', 'duration' => '1.5 years'],
+            ['name' => 'Bachelor of Science in Biotechnology', 'duration' => '4 years'],
+            ['name' => 'Bachelor of Architecture', 'duration' => '5 years'],
+            ['name' => 'Bachelor of Social Work', 'duration' => '3 years'],
+            ['name' => 'Master of Education', 'duration' => '2 years'],
         ];
 
         foreach ($programs as $program) {
-            Program::updateOrCreate(
-                ['slug' => Str::slug($program['name'])],
-                [
+            $slug = Str::slug($program['name']);
+            
+            // Check if program already exists
+            $exists = DB::table('programs')->where('slug', $slug)->exists();
+            
+            if (!$exists) {
+                DB::table('programs')->insert([
+                    'id' => Str::uuid(),
                     'name' => $program['name'],
+                    'slug' => $slug,
                     'duration' => $program['duration'],
                     'is_active' => true,
-                    'sort_order' => $program['sort_order'],
-                ]
-            );
+                    'sort_order' => 1,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
+
+        $this->command->info('Programs seeded successfully!');
     }
 }
