@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
+# Ensure APP_KEY is set
+if [ -z "$APP_KEY" ]; then
+    echo "ERROR: APP_KEY environment variable is not set"
+    exit 1
+fi
+
 mkdir -p database
 touch database/database.sqlite
 

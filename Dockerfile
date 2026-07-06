@@ -1,5 +1,4 @@
 FROM php:8.4-cli
-# cache bust 1
 
 WORKDIR /var/www/html
 
