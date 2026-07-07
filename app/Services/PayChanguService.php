@@ -7,65 +7,107 @@ use Illuminate\Support\Facades\Log;
 
 class PayChanguService
 {
-    protected $apiKey;
+    protected $publicKey;
     protected $secretKey;
     protected $baseUrl;
+    protected $callbackUrl;
     protected $returnUrl;
-    protected $cancelUrl;
+    protected $timeout;
+    protected $mode;
 
     public function __construct()
     {
-        $this->apiKey = env('PAYCHANGU_API_KEY');
+        $this->publicKey = env('PAYCHANGU_PUBLIC_KEY');
         $this->secretKey = env('PAYCHANGU_SECRET_KEY');
         $this->baseUrl = env('PAYCHANGU_BASE_URL', 'https://api.paychangu.com');
+        $this->callbackUrl = env('PAYCHANGU_CALLBACK_URL', env('APP_URL') . '/webhook/paychangu');
         $this->returnUrl = env('PAYCHANGU_RETURN_URL', env('APP_URL') . '/payment/return');
-        $this->cancelUrl = env('PAYCHANGU_CANCEL_URL', env('APP_URL') . '/payment/cancel');
+        $this->timeout = (int) env('PAYCHANGU_TIMEOUT', 30);
+        $this->mode = env('PAYCHANGU_MODE', 'sandbox');
+
+        Log::info('PayChangu Service Initialized', [
+            'mode' => $this->mode,
+            'base_url' => $this->baseUrl,
+            'public_key' => $this->publicKey ? substr($this->publicKey, 0, 10) . '...' : 'MISSING',
+            'secret_key' => $this->secretKey ? substr($this->secretKey, 0, 10) . '...' : 'MISSING',
+        ]);
     }
 
     public function initiatePayment($data)
     {
         try {
+            // Correct endpoint for PayChangu
+            $endpoint = $this->baseUrl . '/payment';
+            
+            // Split full name
+            $nameParts = explode(' ', trim($data['full_name'] ?? 'Customer'), 2);
+            $firstName = $nameParts[0] ?? 'Customer';
+            $lastName = $nameParts[1] ?? '';
+
             $payload = [
-                'amount' => (float) $data['amount'],
-                'currency' => 'ZMW',
-                'description' => 'Application Fee - ' . $data['reference'],
-                'reference' => $data['reference'],
+                'amount' => (string) $data['amount'],
+                'currency' => 'MWK',
                 'email' => $data['email'] ?? 'customer@example.com',
-                'phone' => $data['phone'] ?? '0977000000',
-                'name' => $data['full_name'] ?? 'Customer',
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'callback_url' => $this->callbackUrl,
                 'return_url' => $this->returnUrl,
-                'cancel_url' => $this->cancelUrl,
+                'tx_ref' => $data['reference'],
+                'customization' => [
+                    'title' => 'Application Fee',
+                    'description' => 'Application Fee - ' . $data['reference'],
+                ],
             ];
 
-            Log::info('PayChangu Payment Initiation', ['payload' => $payload]);
+            Log::info('PayChangu Payment Initiation', [
+                'endpoint' => $endpoint,
+                'payload' => $payload,
+                'mode' => $this->mode,
+                'public_key_used' => $this->publicKey ? 'yes' : 'no',
+            ]);
 
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->secretKey,
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ])->post($this->baseUrl . '/api/v1/payments', $payload);
+            $response = Http::timeout($this->timeout)
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $this->secretKey,
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                    'X-Public-Key' => $this->publicKey,
+                ])
+                ->post($endpoint, $payload);
 
-            Log::info('PayChangu Payment Response', ['response' => $response->json()]);
+            $responseData = $response->json();
+            
+            Log::info('PayChangu Payment Response', [
+                'status' => $response->status(),
+                'response' => $responseData
+            ]);
 
-            if ($response->successful()) {
-                $data = $response->json();
+            if ($response->successful() && isset($responseData['data']['checkout_url'])) {
                 return [
                     'success' => true,
-                    'data' => $data,
-                    'redirect_url' => $data['data']['redirect_url'] ?? null,
-                    'payment_id' => $data['data']['payment_id'] ?? null,
+                    'data' => $responseData,
+                    'redirect_url' => $responseData['data']['checkout_url'],
+                    'payment_id' => $responseData['data']['id'] ?? null,
                 ];
             }
 
-            Log::error('PayChangu Payment Failed', ['response' => $response->body()]);
+            $errorMessage = $responseData['message'] ?? 'Payment initiation failed';
+            
+            Log::error('PayChangu Payment Failed', [
+                'status' => $response->status(),
+                'response' => $responseData
+            ]);
+            
             return [
                 'success' => false,
-                'message' => $response->json()['message'] ?? 'Payment initiation failed',
-                'error' => $response->body(),
+                'message' => $errorMessage,
+                'error' => $responseData,
             ];
 
         } catch (\Exception $e) {
-            Log::error('PayChangu Error: ' . $e->getMessage());
+            Log::error('PayChangu Error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
             return [
                 'success' => false,
                 'message' => 'Payment service error: ' . $e->getMessage(),
@@ -73,25 +115,41 @@ class PayChanguService
         }
     }
 
-    public function verifyPayment($reference)
+    public function verifyPayment($txRef)
     {
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->secretKey,
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ])->get($this->baseUrl . '/api/v1/payments/' . $reference);
+            $endpoint = $this->baseUrl . '/verify-payment/' . $txRef;
+            
+            Log::info('PayChangu Verification', [
+                'endpoint' => $endpoint,
+                'tx_ref' => $txRef,
+            ]);
+
+            $response = Http::timeout($this->timeout)
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $this->secretKey,
+                    'Accept' => 'application/json',
+                    'X-Public-Key' => $this->publicKey,
+                ])
+                ->get($endpoint);
+
+            $responseData = $response->json();
 
             if ($response->successful()) {
                 return [
                     'success' => true,
-                    'data' => $response->json(),
+                    'data' => $responseData,
                 ];
             }
 
+            Log::warning('PayChangu Verification Failed', [
+                'status' => $response->status(),
+                'response' => $responseData
+            ]);
+
             return [
                 'success' => false,
-                'message' => $response->json()['message'] ?? 'Verification failed',
+                'message' => $responseData['message'] ?? 'Verification failed',
             ];
 
         } catch (\Exception $e) {
