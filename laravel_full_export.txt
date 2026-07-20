@@ -1,0 +1,3239 @@
+========== LARAVEL PROJECT STRUCTURE ==========
+.
+├── app
+│   ├── Http
+│   │   └── Controllers
+│   │       ├── Admin
+│   │       ├── Api
+│   │       ├── ApplicationController.php
+│   │       ├── Auth
+│   │       ├── AuthController.php
+│   │       ├── BoardFeeController.php
+│   │       ├── Controller.php
+│   │       ├── ExamBoardController.php
+│   │       ├── IntakeController.php
+│   │       ├── IntakeProgramController.php
+│   │       └── ProgramController.php
+│   ├── Mail
+│   │   └── ApplicationStatusUpdated.php
+│   ├── Models
+│   │   ├── Application.php
+│   │   ├── BoardFee.php
+│   │   ├── ExamBoard.php
+│   │   ├── Intake.php
+│   │   ├── IntakeProgram.php
+│   │   ├── Payment.php
+│   │   ├── Program.php
+│   │   └── User.php
+│   ├── Providers
+│   │   └── AppServiceProvider.php
+│   └── Services
+│       └── PayChanguService.php
+├── artisan
+├── bootstrap
+│   ├── app.php
+│   ├── cache
+│   │   ├── packages.php
+│   │   └── services.php
+│   └── providers.php
+├── composer.json
+├── composer.lock
+├── config
+│   ├── app.php
+│   ├── auth.php
+│   ├── cache.php
+│   ├── cors.php
+│   ├── database.php
+│   ├── filesystems.php
+│   ├── logging.php
+│   ├── mail.php
+│   ├── queue.php
+│   ├── sanctum.php
+│   ├── services.php
+│   └── session.php
+├── database
+│   ├── database.sqlite
+│   ├── factories
+│   │   └── UserFactory.php
+│   ├── migrations
+│   │   ├── 2026_03_26_101358_create_applications_table.php
+│   │   ├── 2026_03_31_132614_add_extra_fields_to_applications_table.php
+│   │   ├── 2026_03_31_135911_create_programs_table.php
+│   │   ├── 2026_04_01_051429_add_missing_fields_to_applications_table.php
+│   │   ├── 2026_04_01_054343_create_intakes_table.php
+│   │   ├── 2026_04_01_054344_create_intake_programs_table.php
+│   │   ├── 2026_04_01_062926_add_tuition_fee_notes_to_intake_programs_table.php
+│   │   ├── 2026_04_02_030008_add_content_fields_to_programs_table.php
+│   │   ├── 2026_05_17_145115_recreate_exam_boards_and_fees_tables.php
+│   │   ├── 2026_05_18_133450_create_personal_access_tokens_table.php
+│   │   ├── 2026_05_29_054249_add_is_active_and_sort_order_to_programs_table.php
+│   │   ├── 2026_07_04_235147_create_users_table.php
+│   │   ├── 2026_07_04_235427_create_sessions_table.php
+│   │   ├── 2026_07_05_012227_create_payments_table.php
+│   │   └── 2026_07_05_012620_create_cache_table.php
+│   └── seeders
+│       ├── BoardFeeSeeder.php
+│       ├── DatabaseSeeder.php
+│       ├── ExamBoardSeeder.php
+│       ├── IntakeSeeder.php
+│       └── ProgramSeeder.php
+├── Dockerfile
+├── laravel_full_export.txt
+├── nixpacks.toml
+├── package.json
+├── package-lock.json
+├── php.ini
+├── phpunit.xml
+├── postman
+│   └── globals
+│       └── workspace.globals.yaml
+├── public
+│   ├── favicon.ico
+│   ├── images
+│   │   ├── hero.jpg
+│   │   ├── logo.png
+│   │   └── students.jpg
+│   ├── index.php
+│   └── robots.txt
+├── railway.json
+├── README.md
+├── resources
+│   ├── css
+│   │   └── app.css
+│   ├── js
+│   │   ├── app.js
+│   │   └── bootstrap.js
+│   └── views
+│       ├── admin
+│       │   ├── application-detail.blade.php
+│       │   ├── applications
+│       │   ├── applications.blade.php
+│       │   ├── auth
+│       │   ├── board-fees
+│       │   ├── dashboard.blade.php
+│       │   ├── exam-boards
+│       │   ├── intakes
+│       │   ├── payments.blade.php
+│       │   └── programs
+│       ├── applications
+│       │   ├── create.blade.php
+│       │   ├── failed.blade.php
+│       │   └── success.blade.php
+│       ├── apply.blade.php
+│       ├── auth
+│       │   └── login.blade.php
+│       ├── emails
+│       │   └── application-status-updated.blade.php
+│       ├── home.blade.php
+│       ├── layouts
+│       │   └── admin.blade.php
+│       ├── program-details.blade.php
+│       ├── programs
+│       │   ├── index.blade.php
+│       │   └── show.blade.php
+│       └── welcome.blade.php
+├── routes
+│   ├── api.php
+│   ├── console.php
+│   └── web.php
+├── start.sh
+├── tables.txt
+├── tests
+│   ├── Feature
+│   │   └── ExampleTest.php
+│   ├── TestCase.php
+│   └── Unit
+│       └── ExampleTest.php
+├── users_schema.txt
+└── vite.config.js
+
+42 directories, 105 files
+
+========== APP CODE ==========
+
+=== app/Mail/ApplicationStatusUpdated.php ===
+<?php
+
+namespace App\Mail;
+
+use App\Models\Application;
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+
+class ApplicationStatusUpdated extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    public Application $application;
+
+    public function __construct(Application $application)
+    {
+        $this->application = $application;
+    }
+
+    public function build()
+    {
+        return $this->subject('Your Application Status Has Been Updated')
+            ->view('emails.application-status-updated');
+    }
+}
+=== app/Providers/AppServiceProvider.php ===
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        //
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        //
+    }
+}
+
+=== app/Models/IntakeProgram.php ===
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class IntakeProgram extends Model
+{
+    protected $fillable = [
+        'intake_id',
+        'program_id',
+        'required_subject_count',
+        'tuition_fee_notes',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    public function intake(): BelongsTo
+    {
+        return $this->belongsTo(Intake::class);
+    }
+
+    public function program(): BelongsTo
+    {
+        return $this->belongsTo(Program::class);
+    }
+}
+=== app/Models/BoardFee.php ===
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class BoardFee extends Model
+{
+    use HasUuids;
+
+    protected $fillable = [
+        'exam_board_id',
+        'fee_name',
+        'amount',
+        'currency',
+    ];
+
+    protected $casts = [
+        'amount' => 'decimal:2',
+    ];
+
+    public function examBoard(): BelongsTo
+    {
+        return $this->belongsTo(ExamBoard::class);
+    }
+}
+=== app/Models/User.php ===
+<?php
+
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable
+{
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+}
+=== app/Models/Intake.php ===
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Intake extends Model
+{
+    protected $fillable = [
+        'name',
+        'slug',
+        'start_month',
+        'end_month',
+        'study_mode',
+        'is_active',
+        'sort_order',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    public function intakePrograms(): HasMany
+    {
+        return $this->hasMany(IntakeProgram::class);
+    }
+}
+=== app/Models/Program.php ===
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Program extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'id',
+        'name',
+        'slug',
+        'duration',
+        'is_active',
+        'sort_order',
+    ];
+
+    protected $casts = [
+        'id' => 'string',
+        'is_active' => 'boolean',
+    ];
+
+    public $incrementing = false;
+    protected $keyType = 'string';
+}
+
+=== app/Models/Payment.php ===
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Payment extends Model
+{
+    //
+}
+
+=== app/Models/ExamBoard.php ===
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class ExamBoard extends Model
+{
+    use HasUuids;
+
+    protected $fillable = [
+        'name',
+        'code',
+    ];
+
+    public function fees(): HasMany
+    {
+        return $this->hasMany(BoardFee::class);
+    }
+}
+=== app/Models/Application.php ===
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Application extends Model
+{
+    protected $fillable = [
+        'full_name',
+        'gender',
+        'marital_status',
+        'date_of_birth',
+        'nationality',
+        'district',
+        'phone',
+        'email',
+        'address',
+        'postal_address',
+        'program',
+        'occupation',
+        'employer',
+        'sponsor',
+        'sponsor_phone',
+        'exam_board',
+        'highest_qualification',
+        'other_qualifications',
+        'previous_school',
+        'certificate_file',
+        'id_file',
+        'message',
+        'agreed',
+        'status',
+    ];
+}
+=== app/Http/Controllers/ApplicationController.php ===
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Application;
+use App\Models\Payment;
+use App\Models\Program;
+use App\Services\PayChanguService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
+class ApplicationController extends Controller
+{
+    protected $paychangu;
+
+    public function __construct(PayChanguService $paychangu)
+    {
+        $this->paychangu = $paychangu;
+    }
+
+    public function create()
+    {
+        $programs = Program::where('is_active', true)
+            ->orderBy('name')
+            ->get();
+        
+        $applicationFee = 500;
+
+        return view('applications.create', compact('programs', 'applicationFee'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'program' => 'required|string',
+            'full_name' => 'required|string|max:255',
+            'gender' => 'nullable|string',
+            'marital_status' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'required|string|max:255',
+            'address' => 'nullable|string',
+            'postal_address' => 'nullable|string',
+            'district' => 'nullable|string|max:255',
+            'nationality' => 'nullable|string|max:255',
+            'highest_qualification' => 'nullable|string',
+            'other_qualifications' => 'nullable|string',
+            'previous_school' => 'nullable|string|max:255',
+            'exam_board' => 'nullable|string|max:255',
+            'certificate_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'id_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'occupation' => 'nullable|string|max:255',
+            'employer' => 'nullable|string|max:255',
+            'sponsor' => 'nullable|string|max:255',
+            'sponsor_phone' => 'nullable|string|max:255',
+            'message' => 'nullable|string',
+            'agreed' => 'required|boolean',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            if ($request->hasFile('certificate_file')) {
+                $validated['certificate_file'] = $request->file('certificate_file')->store('certificates', 'public');
+            }
+
+            if ($request->hasFile('id_file')) {
+                $validated['id_file'] = $request->file('id_file')->store('ids', 'public');
+            }
+
+            $validated['status'] = 'Pending Payment';
+            $application = Application::create($validated);
+
+            $reference = 'APP-' . $application->id . '-' . Str::random(8);
+
+            $payment = Payment::create([
+                'application_id' => $application->id,
+                'reference' => $reference,
+                'amount' => 500,
+                'currency' => 'ZMW',
+                'status' => 'pending',
+            ]);
+
+            $paymentData = [
+                'amount' => 500,
+                'reference' => $reference,
+                'email' => $validated['email'] ?? 'customer@example.com',
+                'phone' => $validated['phone'] ?? '0977000000',
+                'full_name' => $validated['full_name'],
+            ];
+
+            $response = $this->paychangu->initiatePayment($paymentData);
+
+            if (!$response['success']) {
+                throw new \Exception($response['message'] ?? 'Payment initiation failed');
+            }
+
+            DB::commit();
+            return redirect($response['redirect_url']);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
+        }
+    }
+
+    public function paymentReturn(Request $request)
+    {
+        $reference = $request->query('reference');
+        
+        if (!$reference) {
+            return redirect('/')->with('error', 'Invalid payment reference');
+        }
+
+        $response = $this->paychangu->verifyPayment($reference);
+
+        if ($response['success'] && isset($response['data']['data']['status']) && $response['data']['data']['status'] === 'paid') {
+            $payment = Payment::where('reference', $reference)->first();
+            if ($payment) {
+                $payment->update([
+                    'status' => 'paid',
+                    'transaction_id' => $response['data']['data']['transaction_id'] ?? null,
+                    'payment_response' => $response['data'],
+                    'paid_at' => now(),
+                ]);
+                $payment->application->update(['status' => 'Paid']);
+            }
+            return redirect('/success')->with('success', 'Payment successful!');
+        }
+
+        return redirect('/payment/failed')->with('error', 'Payment verification failed.');
+    }
+
+    public function paymentCancel(Request $request)
+    {
+        $reference = $request->query('reference');
+        
+        if ($reference) {
+            $payment = Payment::where('reference', $reference)->first();
+            if ($payment) {
+                $payment->update(['status' => 'cancelled']);
+                $payment->application->update(['status' => 'Cancelled']);
+            }
+        }
+
+        return redirect('/')->with('error', 'Payment was cancelled.');
+    }
+
+    public function success()
+    {
+        return view('applications.success');
+    }
+
+    public function failed()
+    {
+        return view('applications.failed');
+    }
+
+    public function index()
+    {
+        $applications = Application::orderBy('created_at', 'desc')->get();
+        return view('applications.index', compact('applications'));
+    }
+}
+
+=== app/Http/Controllers/IntakeProgramController.php ===
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Intake;
+use App\Models\IntakeProgram;
+use App\Models\Program;
+use Illuminate\Http\Request;
+
+class IntakeProgramController extends Controller
+{
+    public function index()
+    {
+        $intakes = Intake::orderBy('sort_order')->get();
+        $programs = Program::where('is_active', true)->orderBy('sort_order')->get();
+
+        $intakePrograms = IntakeProgram::with(['intake', 'program'])
+            ->latest()
+            ->get();
+
+        return view('admin.intake-programs.index', compact('intakes', 'programs', 'intakePrograms'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'intake_id' => 'required|exists:intakes,id',
+            'program_id' => 'required|exists:programs,id',
+            'required_subject_count' => 'nullable|integer|min:1|max:20',
+            'is_active' => 'required|in:0,1',
+        ]);
+
+        IntakeProgram::updateOrCreate(
+            [
+                'intake_id' => $data['intake_id'],
+                'program_id' => $data['program_id'],
+            ],
+            [
+                'required_subject_count' => $data['required_subject_count'],
+                'is_active' => (bool) $data['is_active'],
+            ]
+        );
+
+        return back()->with('success', 'Program assigned to intake successfully.');
+    }
+
+    public function destroy(IntakeProgram $intakeProgram)
+    {
+        $intakeProgram->delete();
+
+        return back()->with('success', 'Program removed from intake.');
+    }
+}
+=== app/Http/Controllers/IntakeController.php ===
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Intake;
+use App\Models\Program;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
+class IntakeController extends Controller
+{
+    public function index()
+    {
+        $intakes = Intake::with(['intakePrograms.program'])
+            ->orderBy('sort_order')
+            ->get();
+
+        $programs = Program::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
+
+        return view('admin.intakes.index', compact('intakes', 'programs'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:intakes,name',
+            'start_month' => 'required|string|max:30',
+            'end_month' => 'required|string|max:30',
+            'study_mode' => 'required|string|max:50',
+            'is_active' => 'required|in:0,1',
+            'selected_programs' => 'required|array|min:1',
+            'selected_programs.*' => 'integer|exists:programs,id',
+            'program_settings' => 'nullable|array',
+        ]);
+
+        DB::transaction(function () use ($validated) {
+            $intake = Intake::create([
+                'name' => $validated['name'],
+                'slug' => Str::slug($validated['name']),
+                'start_month' => $validated['start_month'],
+                'end_month' => $validated['end_month'],
+                'study_mode' => $validated['study_mode'],
+                'is_active' => (bool) $validated['is_active'],
+                'sort_order' => Intake::count() + 1,
+            ]);
+
+            foreach ($validated['selected_programs'] as $programId) {
+                $settings = $validated['program_settings'][$programId] ?? [];
+
+                $requiredSubjectCount = $settings['required_subject_count'] ?? null;
+                $tuitionFeeNotes = $settings['tuition_fee_notes'] ?? null;
+                $programIsActive = isset($settings['is_active']) ? (bool) $settings['is_active'] : true;
+
+                $intake->intakePrograms()->create([
+                    'program_id' => $programId,
+                    'required_subject_count' => $requiredSubjectCount !== null && $requiredSubjectCount !== ''
+                        ? (int) $requiredSubjectCount
+                        : null,
+                    'tuition_fee_notes' => $tuitionFeeNotes ?: null,
+                    'is_active' => $programIsActive,
+                ]);
+            }
+        });
+
+        return back()->with('success', 'Intake created successfully.');
+    }
+
+    public function destroy(Intake $intake)
+    {
+        $intake->delete();
+
+        return back()->with('success', 'Intake deleted.');
+    }
+}
+=== app/Http/Controllers/AuthController.php ===
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+
+class AuthController extends Controller
+{
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/admin/applications');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    }
+}
+
+=== app/Http/Controllers/BoardFeeController.php ===
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\BoardFee;
+use App\Models\ExamBoard;
+use Illuminate\Http\Request;
+
+class BoardFeeController extends Controller
+{
+    public function index()
+    {
+        $boardFees = BoardFee::with('examBoard')
+            ->orderByDesc('id')
+            ->get();
+
+        $examBoards = ExamBoard::orderBy('name')->get();
+
+        return view('admin.board-fees.index', compact('boardFees', 'examBoards'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'exam_board_id' => 'required|exists:exam_boards,id',
+            'amount' => 'required|numeric|min:0',
+            'currency' => 'required|in:MWK,USD',
+        ]);
+
+        BoardFee::updateOrCreate(
+            [
+                'exam_board_id' => $data['exam_board_id'],
+                'currency' => $data['currency'], // 🔥 FIX
+            ],
+            [
+                'fee_name' => 'Board Fee',
+                'amount' => $data['amount'],
+            ]
+        );
+
+        return back()->with('success', 'Board fee saved successfully.');
+    }
+
+    public function destroy(BoardFee $boardFee)
+    {
+        $boardFee->delete();
+
+        return back()->with('success', 'Board fee deleted.');
+    }
+}
+=== app/Http/Controllers/ExamBoardController.php ===
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\ExamBoard;
+use Illuminate\Http\Request;
+
+class ExamBoardController extends Controller
+{
+    public function index()
+    {
+        $examBoards = ExamBoard::orderBy('name')->get();
+
+        return view('admin.exam-boards.index', compact('examBoards'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255|unique:exam_boards,name',
+            'code' => 'required|string|max:50|unique:exam_boards,code',
+        ]);
+
+        ExamBoard::create([
+            'name' => strtoupper(trim($data['name'])),
+            'code' => strtoupper(trim($data['code'])),
+        ]);
+
+        return back()->with('success', 'Exam board added successfully.');
+    }
+
+    public function destroy(ExamBoard $examBoard)
+    {
+        $examBoard->delete();
+
+        return back()->with('success', 'Exam board deleted.');
+    }
+}
+=== app/Http/Controllers/Api/ApplicationController.php ===
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\Application;
+use Illuminate\Http\Request;
+use App\Mail\ApplicationStatusUpdated;
+use Illuminate\Support\Facades\Mail;
+
+class ApplicationController extends Controller
+{
+    public function index(Request $request)
+    {
+        $query = Application::query();
+
+        if ($request->program) {
+            $query->where('program', $request->program);
+        }
+
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        $applications = $query->latest()->get();
+
+        $stats = [
+            'total' => Application::count(),
+            'submitted' => Application::where('status', 'Submitted')->count(),
+            'review' => Application::where('status', 'Under Review')->count(),
+            'approved' => Application::where('status', 'Approved')->count(),
+            'rejected' => Application::where('status', 'Rejected')->count(),
+        ];
+
+        return response()->json([
+            'applications' => $applications,
+            'stats' => $stats,
+        ]);
+    }
+
+    public function show(Application $application)
+    {
+        return response()->json($application);
+    }
+
+    public function updateStatus(Request $request, Application $application)
+    {
+        $request->validate([
+            'status' => 'required|in:Submitted,Under Review,Approved,Rejected',
+        ]);
+
+        $application->update([
+            'status' => $request->status,
+        ]);
+
+        if (!empty($application->email)) {
+            Mail::to($application->email)->send(new ApplicationStatusUpdated($application));
+        }
+
+        return response()->json([
+            'message' => 'Application status updated.',
+            'application' => $application
+        ]);
+    }
+
+    public function destroy(Application $application)
+    {
+        $application->delete();
+
+        return response()->json(['message' => 'Application deleted.']);
+    }
+}
+
+=== app/Http/Controllers/Controller.php ===
+<?php
+
+namespace App\Http\Controllers;
+
+abstract class Controller
+{
+    //
+}
+
+=== app/Http/Controllers/Admin/AdminController.php ===
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Application;
+use App\Models\Payment;
+use App\Models\Program;
+use Illuminate\Http\Request;
+
+class AdminController extends Controller
+{
+    public function dashboard()
+    {
+        $totalApplications = Application::count();
+        $paidApplications = Application::where('status', 'Paid')->count();
+        $pendingPayments = Payment::where('status', 'pending')->count();
+        $totalRevenue = Payment::where('status', 'paid')->sum('amount');
+        $recentApplications = Application::with('payment')
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        return view('admin.dashboard', compact(
+            'totalApplications',
+            'paidApplications',
+            'pendingPayments',
+            'totalRevenue',
+            'recentApplications'
+        ));
+    }
+
+    public function applications()
+    {
+        $applications = Application::with('payment')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+        
+        return view('admin.applications', compact('applications'));
+    }
+
+    public function showApplication($id)
+    {
+        $application = Application::with('payment')->findOrFail($id);
+        return view('admin.application-detail', compact('application'));
+    }
+
+    public function payments()
+    {
+        $payments = Payment::with('application')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+        
+        return view('admin.payments', compact('payments'));
+    }
+
+    public function programs()
+    {
+        $programs = Program::orderBy('name')->get();
+        return view('admin.programs', compact('programs'));
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $application = Application::findOrFail($id);
+        $application->status = $request->status;
+        $application->save();
+
+        return redirect()->back()->with('success', 'Application status updated!');
+    }
+}
+
+=== app/Http/Controllers/Auth/LoginController.php ===
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+
+class LoginController extends Controller
+{
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/admin');
+        }
+
+        return back()->withErrors([
+            'email' => 'Invalid email or password.',
+        ]);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    }
+}
+
+=== app/Http/Controllers/ProgramController.php ===
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Program;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
+class ProgramController extends Controller
+{
+    public function index()
+    {
+        $programs = Program::orderBy('sort_order')->get();
+
+        return view('admin.programs.index', compact('programs'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255|unique:programs,name',
+            'duration' => 'nullable|string|max:100',
+            'introduction' => 'nullable|string',
+            'entry_requirements' => 'nullable|string',
+            'mode_of_delivery' => 'nullable|string',
+            'duration_details' => 'nullable|string',
+            'module_summary' => 'nullable|string',
+            'qualification_levels' => 'nullable|string',
+            'assessment_details' => 'nullable|string',
+            'grading_system' => 'nullable|string',
+            'progression_details' => 'nullable|string',
+            'field_practicals' => 'nullable|string',
+        ]);
+
+        Program::create([
+            'name' => $data['name'],
+            'slug' => Str::slug($data['name']),
+            'duration' => $data['duration'],
+            'introduction' => $data['introduction'] ?? null,
+            'entry_requirements' => $data['entry_requirements'] ?? null,
+            'mode_of_delivery' => $data['mode_of_delivery'] ?? null,
+            'duration_details' => $data['duration_details'] ?? null,
+            'module_summary' => $data['module_summary'] ?? null,
+            'qualification_levels' => $data['qualification_levels'] ?? null,
+            'assessment_details' => $data['assessment_details'] ?? null,
+            'grading_system' => $data['grading_system'] ?? null,
+            'progression_details' => $data['progression_details'] ?? null,
+            'field_practicals' => $data['field_practicals'] ?? null,
+            'is_active' => true,
+            'sort_order' => Program::count() + 1,
+        ]);
+
+        return back()->with('success', 'Program added successfully.');
+    }
+
+    public function destroy(Program $program)
+    {
+        $program->delete();
+
+        return back()->with('success', 'Program deleted.');
+    }
+
+    public function showPublic($slug)
+    {
+        $program = Program::where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        return view('program-details', compact('program'));
+    }
+}
+=== app/Services/PayChanguService.php ===
+<?php
+
+namespace App\Services;
+
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
+class PayChanguService
+{
+    protected $apiKey;
+    protected $secretKey;
+    protected $baseUrl;
+    protected $returnUrl;
+    protected $cancelUrl;
+
+    public function __construct()
+    {
+        $this->apiKey = env('PAYCHANGU_API_KEY');
+        $this->secretKey = env('PAYCHANGU_SECRET_KEY');
+        $this->baseUrl = env('PAYCHANGU_BASE_URL', 'https://api.paychangu.com');
+        $this->returnUrl = env('PAYCHANGU_RETURN_URL', env('APP_URL') . '/payment/return');
+        $this->cancelUrl = env('PAYCHANGU_CANCEL_URL', env('APP_URL') . '/payment/cancel');
+    }
+
+    public function initiatePayment($data)
+    {
+        try {
+            $payload = [
+                'amount' => (float) $data['amount'],
+                'currency' => 'ZMW',
+                'description' => 'Application Fee - ' . $data['reference'],
+                'reference' => $data['reference'],
+                'email' => $data['email'] ?? 'customer@example.com',
+                'phone' => $data['phone'] ?? '0977000000',
+                'name' => $data['full_name'] ?? 'Customer',
+                'return_url' => $this->returnUrl,
+                'cancel_url' => $this->cancelUrl,
+            ];
+
+            Log::info('PayChangu Payment Initiation', ['payload' => $payload]);
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->secretKey,
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ])->post($this->baseUrl . '/api/v1/payments', $payload);
+
+            Log::info('PayChangu Payment Response', ['response' => $response->json()]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                return [
+                    'success' => true,
+                    'data' => $data,
+                    'redirect_url' => $data['data']['redirect_url'] ?? null,
+                    'payment_id' => $data['data']['payment_id'] ?? null,
+                ];
+            }
+
+            Log::error('PayChangu Payment Failed', ['response' => $response->body()]);
+            return [
+                'success' => false,
+                'message' => $response->json()['message'] ?? 'Payment initiation failed',
+                'error' => $response->body(),
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('PayChangu Error: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Payment service error: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+    public function verifyPayment($reference)
+    {
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->secretKey,
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ])->get($this->baseUrl . '/api/v1/payments/' . $reference);
+
+            if ($response->successful()) {
+                return [
+                    'success' => true,
+                    'data' => $response->json(),
+                ];
+            }
+
+            return [
+                'success' => false,
+                'message' => $response->json()['message'] ?? 'Verification failed',
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('PayChangu Verification Error: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Verification error: ' . $e->getMessage(),
+            ];
+        }
+    }
+}
+
+========== ROUTES ==========
+<?php
+
+use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\ExamBoardController;
+use App\Http\Controllers\BoardFeeController;
+use App\Http\Controllers\IntakeController;
+use Illuminate\Support\Facades\Route;
+
+use App\Models\Program;
+
+Route::get('/', function () {
+    $programs = Program::where('is_active', true)
+        ->orderBy('sort_order')
+        ->get();
+
+    return view('home', compact('programs'));
+});
+
+Route::get('/apply', [ApplicationController::class, 'create']);
+Route::post('/apply', [ApplicationController::class, 'store']);
+
+Route::middleware('guest')->group(function () {
+    Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/admin/login', [AuthController::class, 'login']);
+});
+
+Route::middleware('auth')->group(function () {
+    // Applications
+    Route::get('/admin/applications', [ApplicationController::class, 'index']);
+    Route::get('/admin/applications/{application}', [ApplicationController::class, 'show']);
+    Route::post('/admin/applications/{application}/status', [ApplicationController::class, 'updateStatus']);
+    Route::post('/admin/applications/{application}/delete', [ApplicationController::class, 'destroy']);
+
+    // Programs
+    Route::get('/admin/programs', [ProgramController::class, 'index']);
+    Route::get('/admin/programs/create', [ProgramController::class, 'create']);
+    Route::post('/admin/programs', [ProgramController::class, 'store']);
+    Route::get('/admin/programs/{program}/edit', [ProgramController::class, 'edit']);
+    Route::post('/admin/programs/{program}', [ProgramController::class, 'update']);
+    Route::post('/admin/programs/{program}/delete', [ProgramController::class, 'destroy']);
+
+    // Exam Boards
+    Route::get('/admin/exam-boards', [ExamBoardController::class, 'index']);
+    Route::post('/admin/exam-boards', [ExamBoardController::class, 'store']);
+    Route::post('/admin/exam-boards/{board}/delete', [ExamBoardController::class, 'destroy']);
+
+    // Board Fees
+    Route::get('/admin/board-fees', [BoardFeeController::class, 'index']);
+    Route::post('/admin/board-fees', [BoardFeeController::class, 'store']);
+    Route::post('/admin/board-fees/{fee}/delete', [BoardFeeController::class, 'destroy']);
+
+    // Intakes
+    Route::get('/admin/intakes', [IntakeController::class, 'index']);
+    Route::post('/admin/intakes', [IntakeController::class, 'store']);
+    Route::post('/admin/intakes/{intake}/delete', [IntakeController::class, 'destroy']);
+
+    Route::post('/admin/logout', [AuthController::class, 'logout']);
+});
+// Application Routes
+Route::get('/apply', [App\Http\Controllers\ApplicationController::class, 'create'])->name('applications.create');
+Route::post('/apply', [App\Http\Controllers\ApplicationController::class, 'store'])->name('applications.store');
+
+
+// Application Routes
+Route::get('/apply', [App\Http\Controllers\ApplicationController::class, 'create'])->name('applications.create');
+Route::post('/apply', [App\Http\Controllers\ApplicationController::class, 'store'])->name('applications.store');
+Route::get('/applications', [App\Http\Controllers\ApplicationController::class, 'index'])->name('applications.index');
+
+// Payment Routes
+Route::get('/payment/return', [App\Http\Controllers\ApplicationController::class, 'paymentReturn'])->name('payment.return');
+Route::get('/payment/cancel', [App\Http\Controllers\ApplicationController::class, 'paymentCancel'])->name('payment.cancel');
+Route::get('/success', [App\Http\Controllers\ApplicationController::class, 'success'])->name('payment.success');
+Route::get('/payment/failed', [App\Http\Controllers\ApplicationController::class, 'failed'])->name('payment.failed');
+
+// Application Routes
+Route::get('/apply', [App\Http\Controllers\ApplicationController::class, 'create'])->name('applications.create');
+Route::post('/apply', [App\Http\Controllers\ApplicationController::class, 'store'])->name('applications.store');
+Route::get('/applications', [App\Http\Controllers\ApplicationController::class, 'index'])->name('applications.index');
+
+// Payment Routes
+Route::get('/payment/return', [App\Http\Controllers\ApplicationController::class, 'paymentReturn'])->name('payment.return');
+Route::get('/payment/cancel', [App\Http\Controllers\ApplicationController::class, 'paymentCancel'])->name('payment.cancel');
+Route::get('/success', [App\Http\Controllers\ApplicationController::class, 'success'])->name('payment.success');
+Route::get('/payment/failed', [App\Http\Controllers\ApplicationController::class, 'failed'])->name('payment.failed');
+
+// Auth Routes
+Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
+Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+Route::get('/admin-direct', function() { 
+    $user = App\Models\User::where('email', 'admin@zocods.com')->first();
+    if ($user) {
+        auth()->login($user);
+        return redirect('/admin/applications');
+    }
+    return 'User not found';
+});
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ApplicationController;
+
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
+
+Route::get('/applications', [ApplicationController::class, 'index']);
+Route::get('/applications/{application}', [ApplicationController::class, 'show']);
+Route::patch('/applications/{application}/status', [ApplicationController::class, 'updateStatus']);
+Route::delete('/applications/{application}', [ApplicationController::class, 'destroy']);
+
+// PayChangu Webhook
+Route::post('/api/paychangu/webhook', function(Request $request) {
+    \Log::info('PayChangu Webhook', ['data' => $request->all()]);
+    return response()->json(['status' => 'success']);
+});
+
+========== CONFIG ==========
+
+=== config/session.php ===
+<?php
+
+use Illuminate\Support\Str;
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Session Driver
+    |--------------------------------------------------------------------------
+    |
+    | This option determines the default session driver that is utilized for
+    | incoming requests. Laravel supports a variety of storage options to
+    | persist session data. Database storage is a great default choice.
+    |
+    | Supported: "file", "cookie", "database", "memcached",
+    |            "redis", "dynamodb", "array"
+    |
+    */
+
+    'driver' => env('SESSION_DRIVER', 'database'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Lifetime
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the number of minutes that you wish the session
+    | to be allowed to remain idle before it expires. If you want them
+    | to expire immediately when the browser is closed then you may
+    | indicate that via the expire_on_close configuration option.
+    |
+    */
+
+    'lifetime' => (int) env('SESSION_LIFETIME', 120),
+
+    'expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Encryption
+    |--------------------------------------------------------------------------
+    |
+    | This option allows you to easily specify that all of your session data
+    | should be encrypted before it's stored. All encryption is performed
+    | automatically by Laravel and you may use the session like normal.
+    |
+    */
+
+    'encrypt' => env('SESSION_ENCRYPT', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session File Location
+    |--------------------------------------------------------------------------
+    |
+    | When utilizing the "file" session driver, the session files are placed
+    | on disk. The default storage location is defined here; however, you
+    | are free to provide another location where they should be stored.
+    |
+    */
+
+    'files' => storage_path('framework/sessions'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Database Connection
+    |--------------------------------------------------------------------------
+    |
+    | When using the "database" or "redis" session drivers, you may specify a
+    | connection that should be used to manage these sessions. This should
+    | correspond to a connection in your database configuration options.
+    |
+    */
+
+    'connection' => env('SESSION_CONNECTION'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Database Table
+    |--------------------------------------------------------------------------
+    |
+    | When using the "database" session driver, you may specify the table to
+    | be used to store sessions. Of course, a sensible default is defined
+    | for you; however, you're welcome to change this to another table.
+    |
+    */
+
+    'table' => env('SESSION_TABLE', 'sessions'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Cache Store
+    |--------------------------------------------------------------------------
+    |
+    | When using one of the framework's cache driven session backends, you may
+    | define the cache store which should be used to store the session data
+    | between requests. This must match one of your defined cache stores.
+    |
+    | Affects: "dynamodb", "memcached", "redis"
+    |
+    */
+
+    'store' => env('SESSION_STORE'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Sweeping Lottery
+    |--------------------------------------------------------------------------
+    |
+    | Some session drivers must manually sweep their storage location to get
+    | rid of old sessions from storage. Here are the chances that it will
+    | happen on a given request. By default, the odds are 2 out of 100.
+    |
+    */
+
+    'lottery' => [2, 100],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Cookie Name
+    |--------------------------------------------------------------------------
+    |
+    | Here you may change the name of the session cookie that is created by
+    | the framework. Typically, you should not need to change this value
+    | since doing so does not grant a meaningful security improvement.
+    |
+    */
+
+    'cookie' => env(
+        'SESSION_COOKIE',
+        Str::slug((string) env('APP_NAME', 'laravel')).'-session'
+    ),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Cookie Path
+    |--------------------------------------------------------------------------
+    |
+    | The session cookie path determines the path for which the cookie will
+    | be regarded as available. Typically, this will be the root path of
+    | your application, but you're free to change this when necessary.
+    |
+    */
+
+    'path' => env('SESSION_PATH', '/'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Cookie Domain
+    |--------------------------------------------------------------------------
+    |
+    | This value determines the domain and subdomains the session cookie is
+    | available to. By default, the cookie will be available to the root
+    | domain without subdomains. Typically, this shouldn't be changed.
+    |
+    */
+
+    'domain' => env('SESSION_DOMAIN'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | HTTPS Only Cookies
+    |--------------------------------------------------------------------------
+    |
+    | By setting this option to true, session cookies will only be sent back
+    | to the server if the browser has a HTTPS connection. This will keep
+    | the cookie from being sent to you when it can't be done securely.
+    |
+    */
+
+    'secure' => env('SESSION_SECURE_COOKIE'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | HTTP Access Only
+    |--------------------------------------------------------------------------
+    |
+    | Setting this value to true will prevent JavaScript from accessing the
+    | value of the cookie and the cookie will only be accessible through
+    | the HTTP protocol. It's unlikely you should disable this option.
+    |
+    */
+
+    'http_only' => env('SESSION_HTTP_ONLY', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Same-Site Cookies
+    |--------------------------------------------------------------------------
+    |
+    | This option determines how your cookies behave when cross-site requests
+    | take place, and can be used to mitigate CSRF attacks. By default, we
+    | will set this value to "lax" to permit secure cross-site requests.
+    |
+    | See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value
+    |
+    | Supported: "lax", "strict", "none", null
+    |
+    */
+
+    'same_site' => env('SESSION_SAME_SITE', 'lax'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Partitioned Cookies
+    |--------------------------------------------------------------------------
+    |
+    | Setting this value to true will tie the cookie to the top-level site for
+    | a cross-site context. Partitioned cookies are accepted by the browser
+    | when flagged "secure" and the Same-Site attribute is set to "none".
+    |
+    */
+
+    'partitioned' => env('SESSION_PARTITIONED_COOKIE', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Serialization
+    |--------------------------------------------------------------------------
+    |
+    | This value controls the serialization strategy for session data, which
+    | is JSON by default. Setting this to "php" allows the storage of PHP
+    | objects in the session but can make an application vulnerable to
+    | "gadget chain" serialization attacks if the APP_KEY is leaked.
+    |
+    | Supported: "json", "php"
+    |
+    */
+
+    'serialization' => 'json',
+
+];
+
+=== config/services.php ===
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Third Party Services
+    |--------------------------------------------------------------------------
+    |
+    | This file is for storing the credentials for third party services such
+    | as Mailgun, Postmark, AWS and more. This file provides the de facto
+    | location for this type of information, allowing packages to have
+    | a conventional file to locate the various service credentials.
+    |
+    */
+
+    'postmark' => [
+        'key' => env('POSTMARK_API_KEY'),
+    ],
+
+    'resend' => [
+        'key' => env('RESEND_API_KEY'),
+    ],
+
+    'ses' => [
+        'key' => env('AWS_ACCESS_KEY_ID'),
+        'secret' => env('AWS_SECRET_ACCESS_KEY'),
+        'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+    ],
+
+    'slack' => [
+        'notifications' => [
+            'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
+            'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
+        ],
+    ],
+
+];
+
+=== config/mail.php ===
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Mailer
+    |--------------------------------------------------------------------------
+    |
+    | This option controls the default mailer that is used to send all email
+    | messages unless another mailer is explicitly specified when sending
+    | the message. All additional mailers can be configured within the
+    | "mailers" array. Examples of each type of mailer are provided.
+    |
+    */
+
+    'default' => env('MAIL_MAILER', 'log'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mailer Configurations
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure all of the mailers used by your application plus
+    | their respective settings. Several examples have been configured for
+    | you and you are free to add your own as your application requires.
+    |
+    | Laravel supports a variety of mail "transport" drivers that can be used
+    | when delivering an email. You may specify which one you're using for
+    | your mailers below. You may also add additional mailers if needed.
+    |
+    | Supported: "smtp", "sendmail", "mailgun", "ses", "ses-v2",
+    |            "postmark", "resend", "log", "array",
+    |            "failover", "roundrobin"
+    |
+    */
+
+    'mailers' => [
+
+        'smtp' => [
+            'transport' => 'smtp',
+            'scheme' => env('MAIL_SCHEME'),
+            'url' => env('MAIL_URL'),
+            'host' => env('MAIL_HOST', '127.0.0.1'),
+            'port' => env('MAIL_PORT', 2525),
+            'username' => env('MAIL_USERNAME'),
+            'password' => env('MAIL_PASSWORD'),
+            'timeout' => null,
+            'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+        ],
+
+        'ses' => [
+            'transport' => 'ses',
+        ],
+
+        'postmark' => [
+            'transport' => 'postmark',
+            // 'message_stream_id' => env('POSTMARK_MESSAGE_STREAM_ID'),
+            // 'client' => [
+            //     'timeout' => 5,
+            // ],
+        ],
+
+        'resend' => [
+            'transport' => 'resend',
+        ],
+
+        'sendmail' => [
+            'transport' => 'sendmail',
+            'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
+        ],
+
+        'log' => [
+            'transport' => 'log',
+            'channel' => env('MAIL_LOG_CHANNEL'),
+        ],
+
+        'array' => [
+            'transport' => 'array',
+        ],
+
+        'failover' => [
+            'transport' => 'failover',
+            'mailers' => [
+                'smtp',
+                'log',
+            ],
+            'retry_after' => 60,
+        ],
+
+        'roundrobin' => [
+            'transport' => 'roundrobin',
+            'mailers' => [
+                'ses',
+                'postmark',
+            ],
+            'retry_after' => 60,
+        ],
+
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Global "From" Address
+    |--------------------------------------------------------------------------
+    |
+    | You may wish for all emails sent by your application to be sent from
+    | the same address. Here you may specify a name and address that is
+    | used globally for all emails that are sent by your application.
+    |
+    */
+
+    'from' => [
+        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
+    ],
+
+];
+
+=== config/app.php ===
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application, which will be used when the
+    | framework needs to place the application's name in a notification or
+    | other UI elements where an application name needs to be displayed.
+    |
+    */
+
+    'name' => env('APP_NAME', 'Laravel'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Environment
+    |--------------------------------------------------------------------------
+    |
+    | This value determines the "environment" your application is currently
+    | running in. This may determine how you prefer to configure various
+    | services the application utilizes. Set this in your ".env" file.
+    |
+    */
+
+    'env' => env('APP_ENV', 'production'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Debug Mode
+    |--------------------------------------------------------------------------
+    |
+    | When your application is in debug mode, detailed error messages with
+    | stack traces will be shown on every error that occurs within your
+    | application. If disabled, a simple generic error page is shown.
+    |
+    */
+
+    'debug' => (bool) env('APP_DEBUG', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application URL
+    |--------------------------------------------------------------------------
+    |
+    | This URL is used by the console to properly generate URLs when using
+    | the Artisan command line tool. You should set this to the root of
+    | the application so that it's available within Artisan commands.
+    |
+    */
+
+    'url' => env('APP_URL', 'http://localhost'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Timezone
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the default timezone for your application, which
+    | will be used by the PHP date and date-time functions. The timezone
+    | is set to "UTC" by default as it is suitable for most use cases.
+    |
+    */
+
+    'timezone' => 'UTC',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Locale Configuration
+    |--------------------------------------------------------------------------
+    |
+    | The application locale determines the default locale that will be used
+    | by Laravel's translation / localization methods. This option can be
+    | set to any locale for which you plan to have translation strings.
+    |
+    */
+
+    'locale' => env('APP_LOCALE', 'en'),
+
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+
+    'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Encryption Key
+    |--------------------------------------------------------------------------
+    |
+    | This key is utilized by Laravel's encryption services and should be set
+    | to a random, 32 character string to ensure that all encrypted values
+    | are secure. You should do this prior to deploying the application.
+    |
+    */
+
+    'cipher' => 'AES-256-CBC',
+
+    'key' => env('APP_KEY'),
+
+    'previous_keys' => [
+        ...array_filter(
+            explode(',', (string) env('APP_PREVIOUS_KEYS', ''))
+        ),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Maintenance Mode Driver
+    |--------------------------------------------------------------------------
+    |
+    | These configuration options determine the driver used to determine and
+    | manage Laravel's "maintenance mode" status. The "cache" driver will
+    | allow maintenance mode to be controlled across multiple machines.
+    |
+    | Supported drivers: "file", "cache"
+    |
+    */
+
+    'maintenance' => [
+        'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
+        'store' => env('APP_MAINTENANCE_STORE', 'database'),
+    ],
+
+];
+
+=== config/cors.php ===
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cross-Origin Resource Sharing (CORS) Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure your settings for cross-origin resource sharing
+    | or "CORS". This determines what cross-origin operations may execute
+    | in web browsers. You are free to adjust these settings as needed.
+    |
+    | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+    |
+    */
+
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+
+    'allowed_methods' => ['*'],
+
+    'allowed_origins' => ['*'],
+
+    'allowed_origins_patterns' => [],
+
+    'allowed_headers' => ['*'],
+
+    'exposed_headers' => [],
+
+    'max_age' => 0,
+
+    'supports_credentials' => false,
+
+];
+
+=== config/filesystems.php ===
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Filesystem Disk
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the default filesystem disk that should be used
+    | by the framework. The "local" disk, as well as a variety of cloud
+    | based disks are available to your application for file storage.
+    |
+    */
+
+    'default' => env('FILESYSTEM_DISK', 'local'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Filesystem Disks
+    |--------------------------------------------------------------------------
+    |
+    | Below you may configure as many filesystem disks as necessary, and you
+    | may even configure multiple disks for the same driver. Examples for
+    | most supported storage drivers are configured here for reference.
+    |
+    | Supported drivers: "local", "ftp", "sftp", "s3"
+    |
+    */
+
+    'disks' => [
+
+        'local' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private'),
+            'serve' => true,
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'public' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        's3' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_BUCKET'),
+            'url' => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'throw' => false,
+            'report' => false,
+        ],
+
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Symbolic Links
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the symbolic links that will be created when the
+    | `storage:link` Artisan command is executed. The array keys should be
+    | the locations of the links and the values should be their targets.
+    |
+    */
+
+    'links' => [
+        public_path('storage') => storage_path('app/public'),
+    ],
+
+];
+
+=== config/logging.php ===
+<?php
+
+use Monolog\Handler\NullHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\SyslogUdpHandler;
+use Monolog\Processor\PsrLogMessageProcessor;
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Log Channel
+    |--------------------------------------------------------------------------
+    |
+    | This option defines the default log channel that is utilized to write
+    | messages to your logs. The value provided here should match one of
+    | the channels present in the list of "channels" configured below.
+    |
+    */
+
+    'default' => env('LOG_CHANNEL', 'stack'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Deprecations Log Channel
+    |--------------------------------------------------------------------------
+    |
+    | This option controls the log channel that should be used to log warnings
+    | regarding deprecated PHP and library features. This allows you to get
+    | your application ready for upcoming major versions of dependencies.
+    |
+    */
+
+    'deprecations' => [
+        'channel' => env('LOG_DEPRECATIONS_CHANNEL', 'null'),
+        'trace' => env('LOG_DEPRECATIONS_TRACE', false),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Log Channels
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the log channels for your application. Laravel
+    | utilizes the Monolog PHP logging library, which includes a variety
+    | of powerful log handlers and formatters that you're free to use.
+    |
+    | Available drivers: "single", "daily", "slack", "syslog",
+    |                    "errorlog", "monolog", "custom", "stack"
+    |
+    */
+
+    'channels' => [
+
+        'stack' => [
+            'driver' => 'stack',
+            'channels' => explode(',', (string) env('LOG_STACK', 'single')),
+            'ignore_exceptions' => false,
+        ],
+
+        'single' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/laravel.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
+        'daily' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/laravel.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => env('LOG_DAILY_DAYS', 14),
+            'replace_placeholders' => true,
+        ],
+
+        'slack' => [
+            'driver' => 'slack',
+            'url' => env('LOG_SLACK_WEBHOOK_URL'),
+            'username' => env('LOG_SLACK_USERNAME', env('APP_NAME', 'Laravel')),
+            'emoji' => env('LOG_SLACK_EMOJI', ':boom:'),
+            'level' => env('LOG_LEVEL', 'critical'),
+            'replace_placeholders' => true,
+        ],
+
+        'papertrail' => [
+            'driver' => 'monolog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'handler' => env('LOG_PAPERTRAIL_HANDLER', SyslogUdpHandler::class),
+            'handler_with' => [
+                'host' => env('PAPERTRAIL_URL'),
+                'port' => env('PAPERTRAIL_PORT'),
+                'connectionString' => 'tls://'.env('PAPERTRAIL_URL').':'.env('PAPERTRAIL_PORT'),
+            ],
+            'processors' => [PsrLogMessageProcessor::class],
+        ],
+
+        'stderr' => [
+            'driver' => 'monolog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'handler' => StreamHandler::class,
+            'handler_with' => [
+                'stream' => 'php://stderr',
+            ],
+            'formatter' => env('LOG_STDERR_FORMATTER'),
+            'processors' => [PsrLogMessageProcessor::class],
+        ],
+
+        'syslog' => [
+            'driver' => 'syslog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'facility' => env('LOG_SYSLOG_FACILITY', LOG_USER),
+            'replace_placeholders' => true,
+        ],
+
+        'errorlog' => [
+            'driver' => 'errorlog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
+        'null' => [
+            'driver' => 'monolog',
+            'handler' => NullHandler::class,
+        ],
+
+        'emergency' => [
+            'path' => storage_path('logs/laravel.log'),
+        ],
+
+    ],
+
+];
+
+=== config/sanctum.php ===
+<?php
+
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Laravel\Sanctum\Http\Middleware\AuthenticateSession;
+use Laravel\Sanctum\Sanctum;
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Stateful Domains
+    |--------------------------------------------------------------------------
+    |
+    | Requests from the following domains / hosts will receive stateful API
+    | authentication cookies. Typically, these should include your local
+    | and production domains which access your API via a frontend SPA.
+    |
+    */
+
+    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
+        '%s%s',
+        'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
+        Sanctum::currentApplicationUrlWithPort(),
+        // Sanctum::currentRequestHost(),
+    ))),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Sanctum Guards
+    |--------------------------------------------------------------------------
+    |
+    | This array contains the authentication guards that will be checked when
+    | Sanctum is trying to authenticate a request. If none of these guards
+    | are able to authenticate the request, Sanctum will use the bearer
+    | token that's present on an incoming request for authentication.
+    |
+    */
+
+    'guard' => ['web'],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Expiration Minutes
+    |--------------------------------------------------------------------------
+    |
+    | This value controls the number of minutes until an issued token will be
+    | considered expired. This will override any values set in the token's
+    | "expires_at" attribute, but first-party sessions are not affected.
+    |
+    */
+
+    'expiration' => null,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Token Prefix
+    |--------------------------------------------------------------------------
+    |
+    | Sanctum can prefix new tokens in order to take advantage of numerous
+    | security scanning initiatives maintained by open source platforms
+    | that notify developers if they commit tokens into repositories.
+    |
+    | See: https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning
+    |
+    */
+
+    'token_prefix' => env('SANCTUM_TOKEN_PREFIX', ''),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Sanctum Middleware
+    |--------------------------------------------------------------------------
+    |
+    | When authenticating your first-party SPA with Sanctum you may need to
+    | customize some of the middleware Sanctum uses while processing the
+    | request. You may change the middleware listed below as required.
+    |
+    */
+
+    'middleware' => [
+        'authenticate_session' => AuthenticateSession::class,
+        'encrypt_cookies' => EncryptCookies::class,
+        'validate_csrf_token' => ValidateCsrfToken::class,
+    ],
+
+];
+
+=== config/auth.php ===
+<?php
+
+use App\Models\User;
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication Defaults
+    |--------------------------------------------------------------------------
+    |
+    | This option defines the default authentication "guard" and password
+    | reset "broker" for your application. You may change these values
+    | as required, but they're a perfect start for most applications.
+    |
+    */
+
+    'defaults' => [
+        'guard' => env('AUTH_GUARD', 'web'),
+        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication Guards
+    |--------------------------------------------------------------------------
+    |
+    | Next, you may define every authentication guard for your application.
+    | Of course, a great default configuration has been defined for you
+    | which utilizes session storage plus the Eloquent user provider.
+    |
+    | All authentication guards have a user provider, which defines how the
+    | users are actually retrieved out of your database or other storage
+    | system used by the application. Typically, Eloquent is utilized.
+    |
+    | Supported: "session"
+    |
+    */
+
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | User Providers
+    |--------------------------------------------------------------------------
+    |
+    | All authentication guards have a user provider, which defines how the
+    | users are actually retrieved out of your database or other storage
+    | system used by the application. Typically, Eloquent is utilized.
+    |
+    | If you have multiple user tables or models you may configure multiple
+    | providers to represent the model / table. These providers may then
+    | be assigned to any extra authentication guards you have defined.
+    |
+    | Supported: "database", "eloquent"
+    |
+    */
+
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL', User::class),
+        ],
+
+        // 'users' => [
+        //     'driver' => 'database',
+        //     'table' => 'users',
+        // ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Resetting Passwords
+    |--------------------------------------------------------------------------
+    |
+    | These configuration options specify the behavior of Laravel's password
+    | reset functionality, including the table utilized for token storage
+    | and the user provider that is invoked to actually retrieve users.
+    |
+    | The expiry time is the number of minutes that each reset token will be
+    | considered valid. This security feature keeps tokens short-lived so
+    | they have less time to be guessed. You may change this as needed.
+    |
+    | The throttle setting is the number of seconds a user must wait before
+    | generating more password reset tokens. This prevents the user from
+    | quickly generating a very large amount of password reset tokens.
+    |
+    */
+
+    'passwords' => [
+        'users' => [
+            'provider' => 'users',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Password Confirmation Timeout
+    |--------------------------------------------------------------------------
+    |
+    | Here you may define the number of seconds before a password confirmation
+    | window expires and users are asked to re-enter their password via the
+    | confirmation screen. By default, the timeout lasts for three hours.
+    |
+    */
+
+    'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+
+];
+
+=== config/database.php ===
+<?php
+
+use Illuminate\Support\Str;
+
+return [
+
+    'default' => env('DB_CONNECTION', 'sqlite'),
+
+    'connections' => [
+
+        'sqlite' => [
+            'driver' => 'sqlite',
+            'url' => env('DB_URL'),
+            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'prefix' => '',
+            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+            'busy_timeout' => null,
+            'journal_mode' => null,
+            'synchronous' => null,
+        ],
+
+        'mysql' => [
+            'driver' => 'mysql',
+            'url' => env('DB_URL'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'zocods_admissions'),
+            'username' => env('DB_USERNAME', 'zocods_user'),
+            'password' => env('DB_PASSWORD', 'StrongPass123!'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        'mariadb' => [
+            'driver' => 'mariadb',
+            'url' => env('DB_URL'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'zocods_admissions'),
+            'username' => env('DB_USERNAME', 'zocods_user'),
+            'password' => env('DB_PASSWORD', 'StrongPass123!'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        'pgsql' => [
+            'driver' => 'pgsql',
+            'url' => env('DB_URL'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '5432'),
+            'database' => env('DB_DATABASE', 'laravel'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => env('DB_CHARSET', 'utf8'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
+        'sqlsrv' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DB_URL'),
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', '1433'),
+            'database' => env('DB_DATABASE', 'laravel'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => env('DB_CHARSET', 'utf8'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+        ],
+
+    ],
+
+    'migrations' => [
+        'table' => 'migrations',
+        'update_date_on_publish' => true,
+    ],
+
+    'redis' => [
+
+        'client' => env('REDIS_CLIENT', 'phpredis'),
+
+        'options' => [
+            'cluster' => env('REDIS_CLUSTER', 'redis'),
+            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-database-'),
+            'persistent' => env('REDIS_PERSISTENT', false),
+        ],
+
+        'default' => [
+            'url' => env('REDIS_URL'),
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'username' => env('REDIS_USERNAME'),
+            'password' => env('REDIS_PASSWORD'),
+            'port' => env('REDIS_PORT', '6379'),
+            'database' => env('REDIS_DB', '0'),
+        ],
+
+        'cache' => [
+            'url' => env('REDIS_URL'),
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'username' => env('REDIS_USERNAME'),
+            'password' => env('REDIS_PASSWORD'),
+            'port' => env('REDIS_PORT', '6379'),
+            'database' => env('REDIS_CACHE_DB', '1'),
+        ],
+
+    ],
+
+];
+=== config/queue.php ===
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Queue Connection Name
+    |--------------------------------------------------------------------------
+    |
+    | Laravel's queue supports a variety of backends via a single, unified
+    | API, giving you convenient access to each backend using identical
+    | syntax for each. The default queue connection is defined below.
+    |
+    */
+
+    'default' => env('QUEUE_CONNECTION', 'database'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Queue Connections
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the connection options for every queue backend
+    | used by your application. An example configuration is provided for
+    | each backend supported by Laravel. You're also free to add more.
+    |
+    | Drivers: "sync", "database", "beanstalkd", "sqs", "redis",
+    |          "deferred", "background", "failover", "null"
+    |
+    */
+
+    'connections' => [
+
+        'sync' => [
+            'driver' => 'sync',
+        ],
+
+        'database' => [
+            'driver' => 'database',
+            'connection' => env('DB_QUEUE_CONNECTION'),
+            'table' => env('DB_QUEUE_TABLE', 'jobs'),
+            'queue' => env('DB_QUEUE', 'default'),
+            'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 90),
+            'after_commit' => false,
+        ],
+
+        'beanstalkd' => [
+            'driver' => 'beanstalkd',
+            'host' => env('BEANSTALKD_QUEUE_HOST', 'localhost'),
+            'queue' => env('BEANSTALKD_QUEUE', 'default'),
+            'retry_after' => (int) env('BEANSTALKD_QUEUE_RETRY_AFTER', 90),
+            'block_for' => 0,
+            'after_commit' => false,
+        ],
+
+        'sqs' => [
+            'driver' => 'sqs',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'prefix' => env('SQS_PREFIX', 'https://sqs.us-east-1.amazonaws.com/your-account-id'),
+            'queue' => env('SQS_QUEUE', 'default'),
+            'suffix' => env('SQS_SUFFIX'),
+            'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+            'after_commit' => false,
+        ],
+
+        'redis' => [
+            'driver' => 'redis',
+            'connection' => env('REDIS_QUEUE_CONNECTION', 'default'),
+            'queue' => env('REDIS_QUEUE', 'default'),
+            'retry_after' => (int) env('REDIS_QUEUE_RETRY_AFTER', 90),
+            'block_for' => null,
+            'after_commit' => false,
+        ],
+
+        'deferred' => [
+            'driver' => 'deferred',
+        ],
+
+        'background' => [
+            'driver' => 'background',
+        ],
+
+        'failover' => [
+            'driver' => 'failover',
+            'connections' => [
+                'database',
+                'deferred',
+            ],
+        ],
+
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Job Batching
+    |--------------------------------------------------------------------------
+    |
+    | The following options configure the database and table that store job
+    | batching information. These options can be updated to any database
+    | connection and table which has been defined by your application.
+    |
+    */
+
+    'batching' => [
+        'database' => env('DB_CONNECTION', 'sqlite'),
+        'table' => 'job_batches',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Failed Queue Jobs
+    |--------------------------------------------------------------------------
+    |
+    | These options configure the behavior of failed queue job logging so you
+    | can control how and where failed jobs are stored. Laravel ships with
+    | support for storing failed jobs in a simple file or in a database.
+    |
+    | Supported drivers: "database-uuids", "dynamodb", "file", "null"
+    |
+    */
+
+    'failed' => [
+        'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
+        'database' => env('DB_CONNECTION', 'sqlite'),
+        'table' => 'failed_jobs',
+    ],
+
+];
+
+=== config/cache.php ===
+<?php
+
+use Illuminate\Support\Str;
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Cache Store
+    |--------------------------------------------------------------------------
+    |
+    | This option controls the default cache store that will be used by the
+    | framework. This connection is utilized if another isn't explicitly
+    | specified when running a cache operation inside the application.
+    |
+    */
+
+    'default' => env('CACHE_STORE', 'database'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Stores
+    |--------------------------------------------------------------------------
+    |
+    | Here you may define all of the cache "stores" for your application as
+    | well as their drivers. You may even define multiple stores for the
+    | same cache driver to group types of items stored in your caches.
+    |
+    | Supported drivers: "array", "database", "file", "memcached",
+    |                    "redis", "dynamodb", "octane",
+    |                    "failover", "null"
+    |
+    */
+
+    'stores' => [
+
+        'array' => [
+            'driver' => 'array',
+            'serialize' => false,
+        ],
+
+        'database' => [
+            'driver' => 'database',
+            'connection' => env('DB_CACHE_CONNECTION'),
+            'table' => env('DB_CACHE_TABLE', 'cache'),
+            'lock_connection' => env('DB_CACHE_LOCK_CONNECTION'),
+            'lock_table' => env('DB_CACHE_LOCK_TABLE'),
+        ],
+
+        'file' => [
+            'driver' => 'file',
+            'path' => storage_path('framework/cache/data'),
+            'lock_path' => storage_path('framework/cache/data'),
+        ],
+
+        'memcached' => [
+            'driver' => 'memcached',
+            'persistent_id' => env('MEMCACHED_PERSISTENT_ID'),
+            'sasl' => [
+                env('MEMCACHED_USERNAME'),
+                env('MEMCACHED_PASSWORD'),
+            ],
+            'options' => [
+                // Memcached::OPT_CONNECT_TIMEOUT => 2000,
+            ],
+            'servers' => [
+                [
+                    'host' => env('MEMCACHED_HOST', '127.0.0.1'),
+                    'port' => env('MEMCACHED_PORT', 11211),
+                    'weight' => 100,
+                ],
+            ],
+        ],
+
+        'redis' => [
+            'driver' => 'redis',
+            'connection' => env('REDIS_CACHE_CONNECTION', 'cache'),
+            'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
+        ],
+
+        'dynamodb' => [
+            'driver' => 'dynamodb',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+            'table' => env('DYNAMODB_CACHE_TABLE', 'cache'),
+            'endpoint' => env('DYNAMODB_ENDPOINT'),
+        ],
+
+        'octane' => [
+            'driver' => 'octane',
+        ],
+
+        'failover' => [
+            'driver' => 'failover',
+            'stores' => [
+                'database',
+                'array',
+            ],
+        ],
+
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Key Prefix
+    |--------------------------------------------------------------------------
+    |
+    | When utilizing the APC, database, memcached, Redis, and DynamoDB cache
+    | stores, there might be other applications using the same cache. For
+    | that reason, you may prefix every cache key to avoid collisions.
+    |
+    */
+
+    'prefix' => env('CACHE_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-cache-'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Serializable Classes
+    |--------------------------------------------------------------------------
+    |
+    | This value determines the classes that can be unserialized from cache
+    | storage. By default, no PHP classes will be unserialized from your
+    | cache to prevent gadget chain attacks if your APP_KEY is leaked.
+    |
+    */
+
+    'serializable_classes' => false,
+
+];
+
+========== DATABASE (Migrations) ==========
+
+=== database/migrations/2026_04_02_030008_add_content_fields_to_programs_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('programs', function (Blueprint $table) {
+            $table->text('introduction')->nullable()->after('duration');
+            $table->text('entry_requirements')->nullable()->after('introduction');
+            $table->text('mode_of_delivery')->nullable()->after('entry_requirements');
+            $table->text('duration_details')->nullable()->after('mode_of_delivery');
+            $table->text('module_summary')->nullable()->after('duration_details');
+            $table->text('qualification_levels')->nullable()->after('module_summary');
+            $table->text('assessment_details')->nullable()->after('qualification_levels');
+            $table->text('grading_system')->nullable()->after('assessment_details');
+            $table->text('progression_details')->nullable()->after('grading_system');
+            $table->text('field_practicals')->nullable()->after('progression_details');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('programs', function (Blueprint $table) {
+            $table->dropColumn([
+                'introduction',
+                'entry_requirements',
+                'mode_of_delivery',
+                'duration_details',
+                'module_summary',
+                'qualification_levels',
+                'assessment_details',
+                'grading_system',
+                'progression_details',
+                'field_practicals',
+            ]);
+        });
+    }
+};
+=== database/migrations/2026_03_31_135911_create_programs_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('programs', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
+            $table->string('duration')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->unsignedInteger('sort_order')->default(0);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('programs');
+    }
+};
+
+=== database/migrations/2026_07_04_235427_create_sessions_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('sessions');
+    }
+};
+
+=== database/migrations/2026_04_01_051429_add_missing_fields_to_applications_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('applications', function (Blueprint $table) {
+
+            $table->string('marital_status')->nullable()->after('gender');
+            $table->string('district')->nullable()->after('nationality');
+
+            $table->string('sponsor_phone')->nullable()->after('sponsor');
+            $table->string('employer')->nullable()->after('occupation');
+
+            $table->text('postal_address')->nullable()->after('address');
+
+            // extra qualifications
+            $table->text('other_qualifications')->nullable()->after('highest_qualification');
+
+            // declaration checkbox
+            $table->boolean('agreed')->default(false)->after('message');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('applications', function (Blueprint $table) {
+            $table->dropColumn([
+                'marital_status',
+                'district',
+                'sponsor_phone',
+                'employer',
+                'postal_address',
+                'other_qualifications',
+                'agreed',
+            ]);
+        });
+    }
+};
+=== database/migrations/2026_03_26_101358_create_applications_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('applications', function (Blueprint $table) {
+            $table->id();
+            $table->string('full_name');
+            $table->string('gender')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->string('phone');
+            $table->string('email')->nullable();
+            $table->string('program');
+            $table->text('address')->nullable();
+            $table->string('highest_qualification')->nullable();
+            $table->string('previous_school')->nullable();
+            $table->string('certificate_file')->nullable();
+            $table->string('id_file')->nullable();
+            $table->text('message')->nullable();
+            $table->string('status')->default('Submitted');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('applications');
+    }
+};
+
+=== database/migrations/2026_05_29_054249_add_is_active_and_sort_order_to_programs_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('programs', function (Blueprint $table) {
+            if (! Schema::hasColumn('programs', 'is_active')) {
+                $table->boolean('is_active')->default(true);
+            }
+            if (! Schema::hasColumn('programs', 'sort_order')) {
+                $table->unsignedInteger('sort_order')->default(0);
+            }
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('programs', function (Blueprint $table) {
+            $table->dropColumn(['is_active', 'sort_order']);
+        });
+    }
+};
+
+=== database/migrations/2026_05_17_145115_recreate_exam_boards_and_fees_tables.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        if (!Schema::hasTable('exam_boards')) {
+            Schema::create('exam_boards', function (Blueprint $table) {
+                $table->uuid('id')->primary();
+                $table->string('name');
+                $table->string('code')->nullable();
+                $table->timestamps();
+            });
+        }
+
+        if (!Schema::hasTable('board_fees')) {
+            Schema::create('board_fees', function (Blueprint $table) {
+                $table->uuid('id')->primary();
+                $table->uuid('exam_board_id');
+                $table->string('fee_name')->default('Examination Fee');
+                $table->decimal('amount', 12, 2);
+                $table->string('currency', 10)->default('MWK');
+                $table->timestamps();
+
+                $table->foreign('exam_board_id')->references('id')->on('exam_boards')->onDelete('cascade');
+            });
+        }
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('board_fees');
+        Schema::dropIfExists('exam_boards');
+    }
+};
+
+=== database/migrations/2026_04_01_054344_create_intake_programs_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        if (!Schema::hasTable('intake_programs')) {
+            Schema::create('intake_programs', function (Blueprint $table) {
+                $table->id();
+                $table->uuid('intake_id');
+                $table->uuid('program_id');
+                $table->timestamps();
+
+                $table->foreign('intake_id')
+                      ->references('id')
+                      ->on('intakes')
+                      ->cascadeOnDelete();
+                      
+                $table->foreign('program_id')
+                      ->references('id')
+                      ->on('programs')
+                      ->cascadeOnDelete();
+            });
+        }
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('intake_programs');
+    }
+};
+
+=== database/migrations/2026_07_05_012620_create_cache_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('cache', function (Blueprint $table) {
+            $table->string('key')->primary();
+            $table->mediumText('value');
+            $table->bigInteger('expiration')->index();
+        });
+
+        Schema::create('cache_locks', function (Blueprint $table) {
+            $table->string('key')->primary();
+            $table->string('owner');
+            $table->bigInteger('expiration')->index();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('cache');
+        Schema::dropIfExists('cache_locks');
+    }
+};
+
+=== database/migrations/2026_03_31_132614_add_extra_fields_to_applications_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('applications', function (Blueprint $table) {
+            $table->string('nationality')->nullable();
+            $table->string('occupation')->nullable();
+            $table->string('sponsor')->nullable();
+            $table->string('exam_board')->nullable();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('applications', function (Blueprint $table) {
+            $table->dropColumn([
+                'nationality',
+                'occupation',
+                'sponsor',
+                'exam_board',
+            ]);
+        });
+    }
+};
+=== database/migrations/2026_07_04_235147_create_users_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+    }
+};
+
+=== database/migrations/2026_07_05_012227_create_payments_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('payments', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('application_id')->constrained()->onDelete('cascade');
+            $table->string('reference')->unique();
+            $table->decimal('amount', 10, 2);
+            $table->string('currency')->default('ZMW');
+            $table->string('payment_method')->nullable();
+            $table->string('status')->default('pending');
+            $table->string('transaction_id')->nullable();
+            $table->text('payment_response')->nullable();
+            $table->timestamp('paid_at')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('payments');
+    }
+};
+
+=== database/migrations/2026_04_01_054343_create_intakes_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('intakes', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
+            $table->string('start_month', 30)->nullable();
+            $table->string('end_month', 30)->nullable();
+            $table->string('study_mode')->default('Online');
+            $table->boolean('is_active')->default(true);
+            $table->unsignedInteger('sort_order')->default(0);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('intakes');
+    }
+};
+
+=== database/migrations/2026_05_18_133450_create_personal_access_tokens_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('personal_access_tokens', function (Blueprint $table) {
+            $table->id();
+            $table->morphs('tokenable');
+            $table->text('name');
+            $table->string('token', 64)->unique();
+            $table->text('abilities')->nullable();
+            $table->timestamp('last_used_at')->nullable();
+            $table->timestamp('expires_at')->nullable()->index();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('personal_access_tokens');
+    }
+};
+
+=== database/migrations/2026_04_01_062926_add_tuition_fee_notes_to_intake_programs_table.php ===
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('intake_programs', function (Blueprint $table) {
+            $table->text('tuition_fee_notes')->nullable()->after('required_subject_count');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('intake_programs', function (Blueprint $table) {
+            $table->dropColumn('tuition_fee_notes');
+        });
+    }
+};

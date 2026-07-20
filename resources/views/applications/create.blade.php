@@ -50,7 +50,14 @@
                 </div>
             @endif
 
-            <form action="{{ route('applications.store') }}" method="POST" enctype="multipart/form-data">
+            <!-- Fee Summary -->
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded">
+                <p class="font-semibold text-green-800">💳 Application Fee</p>
+                <p class="text-2xl font-bold text-green-600">{{ $currency ?? 'MWK' }} {{ number_format($applicationFee ?? 500, 2) }}</p>
+                <p class="text-sm text-gray-600">Pay this fee to submit your application</p>
+            </div>
+
+            <form action="{{ route('applications.store') }}" method="POST" enctype="multipart/form-data" id="applicationForm">
                 @csrf
 
                 <!-- Program Selection -->
@@ -437,14 +444,22 @@
                 <div class="flex items-center justify-between border-t pt-6">
                     <button 
                         type="submit" 
+                        id="submitBtn"
                         class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md transition duration-200"
                     >
-                        Submit Application
+                        💳 Pay {{ $currency ?? 'MWK' }} {{ number_format($applicationFee ?? 500, 2) }} & Submit Application
                     </button>
                     <a href="/" class="text-gray-600 hover:text-gray-800">Cancel</a>
                 </div>
             </form>
         </div>
     </div>
+    <script>
+        document.getElementById('applicationForm').addEventListener('submit', function(e) {
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Processing... Please wait';
+        });
+    </script>
 </body>
 </html>
