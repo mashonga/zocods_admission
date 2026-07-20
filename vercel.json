@@ -1,9 +1,11 @@
 {
     "version": 2,
+    "framework": null,
+    "installCommand": "composer install --no-dev --optimize-autoloader --no-interaction",
     "builds": [
         {
             "src": "api/index.php",
-            "use": "vercel-php@0.6.1"
+            "use": "vercel-php@0.7.2"
         },
         {
             "src": "/public/**",
