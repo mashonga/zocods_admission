@@ -12,7 +12,7 @@
     ],
     "routes": [
         {
-            "src": "/(css|js|images|build|svg|pdf|vendor)/(.*)",
+            "src": "/(css|js|images|build|svg|pdf|vendor|favicon\.ico|robots\.txt)/(.*)",
             "dest": "/public/$1/$2"
         },
         {
@@ -21,11 +21,24 @@
         }
     ],
     "env": {
+        "APP_NAME": "ZOCODS Admissions",
         "APP_ENV": "production",
         "APP_DEBUG": "false",
+        "APP_URL": "https://zocods.com",
         "LOG_CHANNEL": "stderr",
+        "LOG_LEVEL": "error",
         "VIEW_COMPILED_PATH": "/tmp",
         "SESSION_DRIVER": "cookie",
-        "CACHE_STORE": "array"
+        "SESSION_LIFETIME": "120",
+        "CACHE_STORE": "array",
+        "FILESYSTEM_DISK": "local",
+        "QUEUE_CONNECTION": "sync",
+        "PAYCHANGU_BASE_URL": "https://api.paychangu.com",
+        "PAYCHANGU_CALLBACK_URL": "https://zocods.com/webhook/paychangu",
+        "PAYCHANGU_RETURN_URL": "https://zocods.com/payment/return",
+        "PAYCHANGU_TIMEOUT": "30",
+        "PAYCHANGU_MODE": "live",
+        "APPLICATION_FEE": "15000",
+        "APPLICATION_CURRENCY": "MWK"
     }
 }

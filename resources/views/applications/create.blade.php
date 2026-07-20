@@ -52,9 +52,16 @@
 
             <!-- Fee Summary -->
             <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded">
-                <p class="font-semibold text-green-800">💳 Application Fee</p>
-                <p class="text-2xl font-bold text-green-600">{{ $currency ?? 'MWK' }} {{ number_format($applicationFee ?? 500, 2) }}</p>
-                <p class="text-sm text-gray-600">Pay this fee to submit your application</p>
+                <div class="flex items-center gap-2 mb-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    <p class="font-semibold text-green-800">Application Fee</p>
+                </div>
+                <p class="text-2xl font-bold text-green-700">{{ $currency ?? 'MWK' }} {{ number_format($applicationFee ?? 15000, 2) }}</p>
+                <div class="flex items-center gap-1 mt-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <p class="text-sm text-red-600 font-medium">This fee is non-refundable.</p>
+                </div>
+                <p class="text-sm text-gray-500 mt-1">After submitting, you will be taken to a secure payment page to complete your application.</p>
             </div>
 
             <form action="{{ route('applications.store') }}" method="POST" enctype="multipart/form-data" id="applicationForm">
@@ -445,9 +452,11 @@
                     <button 
                         type="submit" 
                         id="submitBtn"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md transition duration-200"
+                        style="background:#16a34a; color:white; font-weight:600; padding:10px 24px; border-radius:6px; border:none; cursor:pointer; display:flex; align-items:center; gap:8px; font-size:15px; transition:background 0.2s;"
+                        onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'"
                     >
-                        💳 Pay {{ $currency ?? 'MWK' }} {{ number_format($applicationFee ?? 500, 2) }} & Submit Application
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                        Pay {{ $currency ?? 'MWK' }} {{ number_format($applicationFee ?? 15000, 2) }} &amp; Submit
                     </button>
                     <a href="/" class="text-gray-600 hover:text-gray-800">Cancel</a>
                 </div>
@@ -458,7 +467,9 @@
         document.getElementById('applicationForm').addEventListener('submit', function(e) {
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
-            btn.innerHTML = '⏳ Processing... Please wait';
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'not-allowed';
+            btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Processing...';
         });
     </script>
 </body>

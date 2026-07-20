@@ -20,7 +20,7 @@ class ApplicationController extends Controller
     public function __construct(PayChanguService $paychangu)
     {
         $this->paychangu = $paychangu;
-        $this->applicationFee = (int) env('APPLICATION_FEE', 500);
+        $this->applicationFee = (int) env('APPLICATION_FEE', 15000);
         $this->currency = env('APPLICATION_CURRENCY', 'MWK');
     }
 
