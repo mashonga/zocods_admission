@@ -5,9 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Application Form</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .navbar { background: #16a34a; color: white; padding: 14px 40px; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .brand { display: flex; align-items: center; gap: 14px; }
+        .brand img { width: 56px; height: 56px; object-fit: cover; border-radius: 50%; background: white; border: 2px solid rgba(255,255,255,0.35); }
+        .brand-text h1 { margin: 0; font-size: 18px; line-height: 1.2; font-family: Arial, sans-serif; font-weight: bold; }
+        .brand-text p { margin: 3px 0 0; font-size: 12px; color: #dcfce7; font-family: Arial, sans-serif; }
+        .nav-links { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; font-family: Arial, sans-serif; }
+        .nav-links a { color: white; font-weight: 600; font-size: 15px; text-decoration: none; }
+        .nav-apply { background: #ff7a00; color: white !important; padding: 10px 18px; border-radius: 8px; box-shadow: 0 4px 12px rgba(255,122,0,0.3); }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen py-8">
-    <div class="container mx-auto max-w-4xl">
+<body class="bg-gray-100 min-h-screen">
+    <div class="navbar">
+        <div class="brand">
+            <img src="/images/logo.png" alt="College Logo">
+            <div class="brand-text">
+                <h1>Zomba College of Development Studies</h1>
+                <p>Transforming your dreams into actions</p>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+        </div>
+    </div>
+    <div class="container mx-auto max-w-4xl pt-8">
         <div class="bg-white rounded-lg shadow-lg p-8">
             <h1 class="text-3xl font-bold mb-2 text-gray-800">Application Form</h1>
             <p class="text-gray-600 mb-6">Please fill in all required fields</p>
@@ -175,7 +197,7 @@
                 <!-- Address & Postal Address -->
                 <div class="mb-6">
                     <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
-                        Address
+                        Physical Address
                     </label>
                     <textarea 
                         name="address" 
@@ -355,75 +377,25 @@
                 </div>
 
                 <!-- Employment & Sponsor Information -->
-                <h3 class="text-xl font-semibold text-gray-800 mb-4 mt-8 border-b pb-2">Employment & Sponsor Information</h3>
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 mt-8 border-b pb-2">Employment Information</h3>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <label for="occupation" class="block text-sm font-medium text-gray-700 mb-2">
-                            Occupation
-                        </label>
-                        <input 
-                            type="text" 
-                            name="occupation" 
-                            id="occupation" 
-                            value="{{ old('occupation') }}"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
-                        >
-                        @error('occupation')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="employer" class="block text-sm font-medium text-gray-700 mb-2">
-                            Employer
-                        </label>
-                        <input 
-                            type="text" 
-                            name="employer" 
-                            id="employer" 
-                            value="{{ old('employer') }}"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
-                        >
-                        @error('employer')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                <div class="mb-6">
+                    <label for="occupation" class="block text-sm font-medium text-gray-700 mb-2">
+                        Occupation
+                    </label>
+                    <input 
+                        type="text" 
+                        name="occupation" 
+                        id="occupation" 
+                        value="{{ old('occupation') }}"
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                    >
+                    @error('occupation')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <label for="sponsor" class="block text-sm font-medium text-gray-700 mb-2">
-                            Sponsor Name
-                        </label>
-                        <input 
-                            type="text" 
-                            name="sponsor" 
-                            id="sponsor" 
-                            value="{{ old('sponsor') }}"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
-                        >
-                        @error('sponsor')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
 
-                    <div>
-                        <label for="sponsor_phone" class="block text-sm font-medium text-gray-700 mb-2">
-                            Sponsor Phone
-                        </label>
-                        <input 
-                            type="tel" 
-                            name="sponsor_phone" 
-                            id="sponsor_phone" 
-                            value="{{ old('sponsor_phone') }}"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
-                        >
-                        @error('sponsor_phone')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
 
                 <!-- Message / Additional Info -->
                 <div class="mb-6">

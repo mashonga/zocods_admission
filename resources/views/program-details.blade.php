@@ -305,7 +305,7 @@
 
                 <div class="detail"><strong>Programme Name:</strong> {{ $program->name }}</div>
                 <div class="detail"><strong>Duration:</strong> {{ $program->duration ?: 'To be confirmed by administration' }}</div>
-                <div class="detail"><strong>Mode of Delivery:</strong> {{ $program->mode_of_delivery ?: 'To be confirmed by administration' }}</div>
+                <div class="detail"><strong>School Fees:</strong> {{ $program->fees ?: 'To be confirmed by administration' }}</div>
                 <div class="detail"><strong>Duration Details:</strong> {{ $program->duration_details ?: '—' }}</div>
                 <div class="detail"><strong>Qualification Levels:</strong> {{ $program->qualification_levels ?: '—' }}</div>
             </div>

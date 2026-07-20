@@ -14,6 +14,8 @@ class Program extends Model
         'name',
         'slug',
         'duration',
+        'fees',
+        'entry_requirements',
         'is_active',
         'sort_order',
     ];

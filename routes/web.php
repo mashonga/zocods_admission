@@ -21,6 +21,15 @@ Route::get('/', function () {
 Route::get('/apply', [ApplicationController::class, 'create']);
 Route::post('/apply', [ApplicationController::class, 'store']);
 
+Route::get('/programs', function () {
+    return redirect('/#programs');
+});
+
+Route::get('/programs/{slug}', function ($slug) {
+    $program = Program::where('slug', $slug)->where('is_active', true)->firstOrFail();
+    return view('program-details', compact('program'));
+});
+
 Route::middleware('guest')->group(function () {
     Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/admin/login', [AuthController::class, 'login']);

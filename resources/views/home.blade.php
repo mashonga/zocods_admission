@@ -235,7 +235,8 @@
             transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
             min-height: 86px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .program-link:hover .program-card {
@@ -248,6 +249,22 @@
             margin: 0;
             color: #111827;
             font-size: 18px;
+        }
+
+        .program-card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .program-card-badge {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
         }
 
         .steps {
@@ -428,11 +445,11 @@
 
     <div style="background: #f8fafc; padding: 40px 20px; border-bottom: 1px solid #e5e7eb;">
         <div style="max-width: 1150px; margin: 0 auto; display: flex; gap: 24px; align-items: center; justify-content: center; flex-wrap: wrap;">
-            <a href="https://zomba-college-student-portal.netlify.app" target="_blank" class="portal-pill">
+            <a href="https://students.zocods.com" target="_blank" class="portal-pill">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
                 Student Portal
             </a>
-            <a href="https://zomba-college-lecture-portal.netlify.app" target="_blank" class="portal-pill">
+            <a href="https://lecturers.zocods.com" target="_blank" class="portal-pill">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 Staff Portal
             </a>
@@ -476,6 +493,14 @@
                 <a class="program-link" href="/programs/{{ $program->slug }}">
                     <div class="program-card">
                         <h4>{{ $program->name }}</h4>
+                        <div class="program-card-meta">
+                            @if($program->duration)
+                                <span class="program-card-badge">⏱ {{ $program->duration }}</span>
+                            @endif
+                            @if($program->fees)
+                                <span class="program-card-badge">💳 {{ $program->fees }}</span>
+                            @endif
+                        </div>
                     </div>
                 </a>
             @endforeach
