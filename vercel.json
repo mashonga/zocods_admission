@@ -23,7 +23,7 @@
     "env": {
         "APP_NAME": "ZOCODS Admissions",
         "APP_ENV": "production",
-        "APP_DEBUG": "true",
+        "APP_DEBUG": "false",
         "APP_URL": "https://zocods.com",
         "LOG_CHANNEL": "stderr",
         "LOG_LEVEL": "error",
