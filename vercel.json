@@ -1,6 +1,8 @@
 {
     "version": 2,
     "framework": null,
+    "installCommand": "echo 'Skipping default install'",
+    "buildCommand": "echo 'Skipping default build'",
     "builds": [
         {
             "src": "api/index.php",
@@ -24,7 +26,7 @@
     "env": {
         "APP_NAME": "ZOCODS Admissions",
         "APP_ENV": "production",
-        "APP_DEBUG": "true",
+        "APP_DEBUG": "false",
         "APP_URL": "https://zocods.com",
         "LOG_CHANNEL": "stderr",
         "LOG_LEVEL": "error",
