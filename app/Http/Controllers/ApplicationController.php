@@ -28,6 +28,7 @@ class ApplicationController extends Controller
     {
         try {
             $programs = Program::where('is_active', true)
+                ->whereNull('deleted_at')
                 ->orderBy('name')
                 ->get();
 

@@ -485,7 +485,7 @@
     <section class="section" id="programs">
         <h2 class="section-title">Programs Offered</h2>
         <p class="section-subtitle">
-            Review the available programs before starting your application.
+            Click on any program card below to view its fees, duration, entry requirements, and full details.
         </p>
 
         <div class="program-grid">
@@ -493,13 +493,8 @@
                 <a class="program-link" href="/programs/{{ $program->slug }}">
                     <div class="program-card">
                         <h4>{{ $program->name }}</h4>
-                        <div class="program-card-meta">
-                            @if($program->duration)
-                                <span class="program-card-badge">⏱ {{ $program->duration }}</span>
-                            @endif
-                            @if($program->fees)
-                                <span class="program-card-badge">💳 {{ $program->fees }}</span>
-                            @endif
+                        <div style="font-size: 13px; color: #16a34a; font-weight: 700; display: flex; align-items: center; gap: 4px; margin-top: auto; padding-top: 10px;">
+                            <span>View Program Details</span> &rarr;
                         </div>
                     </div>
                 </a>

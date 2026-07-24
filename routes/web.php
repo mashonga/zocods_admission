@@ -11,6 +11,7 @@ use App\Models\Program;
 
 Route::get('/', function () {
     $programs = Program::where('is_active', true)
+        ->whereNull('deleted_at')
         ->orderBy('sort_order')
         ->get();
     return view('home', compact('programs'));
@@ -30,7 +31,7 @@ Route::get('/programs', function () {
 });
 
 Route::get('/programs/{slug}', function ($slug) {
-    $program = Program::where('slug', $slug)->where('is_active', true)->firstOrFail();
+    $program = Program::where('slug', $slug)->where('is_active', true)->whereNull('deleted_at')->firstOrFail();
     return view('program-details', compact('program'));
 });
 
