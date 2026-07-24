@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/admin/programs', [ProgramController::class, 'index']);
     Route::post('/admin/programs', [ProgramController::class, 'store']);
+    Route::post('/admin/programs/{program}/update', [ProgramController::class, 'update']);
     Route::post('/admin/programs/{program}/delete', [ProgramController::class, 'destroy']);
 
     Route::get('/admin/exam-boards', [ExamBoardController::class, 'index']);

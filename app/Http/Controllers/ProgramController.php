@@ -20,6 +20,7 @@ class ProgramController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:programs,name',
             'duration' => 'nullable|string|max:100',
+            'fees' => 'nullable|string|max:255',
             'introduction' => 'nullable|string',
             'entry_requirements' => 'nullable|string',
             'mode_of_delivery' => 'nullable|string',
@@ -36,6 +37,7 @@ class ProgramController extends Controller
             'name' => $data['name'],
             'slug' => Str::slug($data['name']),
             'duration' => $data['duration'],
+            'fees' => $data['fees'] ?? null,
             'introduction' => $data['introduction'] ?? null,
             'entry_requirements' => $data['entry_requirements'] ?? null,
             'mode_of_delivery' => $data['mode_of_delivery'] ?? null,
@@ -51,6 +53,44 @@ class ProgramController extends Controller
         ]);
 
         return back()->with('success', 'Program added successfully.');
+    }
+
+    public function update(Request $request, Program $program)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255|unique:programs,name,' . $program->id,
+            'duration' => 'nullable|string|max:100',
+            'fees' => 'nullable|string|max:255',
+            'introduction' => 'nullable|string',
+            'entry_requirements' => 'nullable|string',
+            'mode_of_delivery' => 'nullable|string',
+            'duration_details' => 'nullable|string',
+            'module_summary' => 'nullable|string',
+            'qualification_levels' => 'nullable|string',
+            'assessment_details' => 'nullable|string',
+            'grading_system' => 'nullable|string',
+            'progression_details' => 'nullable|string',
+            'field_practicals' => 'nullable|string',
+        ]);
+
+        $program->update([
+            'name' => $data['name'],
+            'slug' => Str::slug($data['name']),
+            'duration' => $data['duration'],
+            'fees' => $data['fees'] ?? null,
+            'introduction' => $data['introduction'] ?? null,
+            'entry_requirements' => $data['entry_requirements'] ?? null,
+            'mode_of_delivery' => $data['mode_of_delivery'] ?? null,
+            'duration_details' => $data['duration_details'] ?? null,
+            'module_summary' => $data['module_summary'] ?? null,
+            'qualification_levels' => $data['qualification_levels'] ?? null,
+            'assessment_details' => $data['assessment_details'] ?? null,
+            'grading_system' => $data['grading_system'] ?? null,
+            'progression_details' => $data['progression_details'] ?? null,
+            'field_practicals' => $data['field_practicals'] ?? null,
+        ]);
+
+        return back()->with('success', 'Program updated successfully.');
     }
 
     public function destroy(Program $program)
