@@ -490,11 +490,11 @@
 
         <div class="program-grid">
             @foreach ($programs as $program)
-                <a class="program-link" href="/programs/{{ $program->slug }}">
+                <a class="program-link" href="/programs/{{ $program->slug ?: $program->id }}">
                     <div class="program-card">
                         <h4>{{ $program->name }}</h4>
-                        <div style="font-size: 13px; color: #16a34a; font-weight: 700; display: flex; align-items: center; gap: 4px; margin-top: auto; padding-top: 10px;">
-                            <span>View Program Details</span> &rarr;
+                        <div style="font-size: 13px; color: #16a34a; font-weight: 700; display: flex; align-items: center; margin-top: auto; padding-top: 10px;">
+                            <span>View Program</span>
                         </div>
                     </div>
                 </a>

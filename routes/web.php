@@ -30,8 +30,14 @@ Route::get('/programs', function () {
     return redirect('/#programs');
 });
 
-Route::get('/programs/{slug}', function ($slug) {
-    $program = Program::where('slug', $slug)->where('is_active', true)->whereNull('deleted_at')->firstOrFail();
+Route::get('/programs/{identifier}', function ($identifier) {
+    $program = Program::where(function ($query) use ($identifier) {
+            $query->where('slug', $identifier)
+                  ->orWhere('id', $identifier);
+        })
+        ->where('is_active', true)
+        ->whereNull('deleted_at')
+        ->firstOrFail();
     return view('program-details', compact('program'));
 });
 
