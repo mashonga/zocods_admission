@@ -340,10 +340,6 @@
             </div>
         </div>
 
-        <div class="cta-row">
-            <a href="/apply?program={{ urlencode($program->name) }}" class="btn-primary">Apply for this Program</a>
-            <a href="/#programs" class="btn-secondary">Back to Programs</a>
-        </div>
     </div>
 
 </body>
