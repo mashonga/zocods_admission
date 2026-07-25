@@ -293,7 +293,6 @@
                 <p class="lead">{{ $program->introduction }}</p>
             @else
                 <p class="lead">
-                    This programme is available for application through the college admissions system.
                     Review the details below and proceed when ready.
                 </p>
             @endif
@@ -307,17 +306,11 @@
                 <div class="detail"><strong>Duration:</strong> {{ $program->duration ?: 'To be confirmed by administration' }}</div>
                 <div class="detail"><strong>School Fees:</strong> {{ $program->fees ?: 'To be confirmed by administration' }}</div>
                 <div class="detail"><strong>Duration Details:</strong> {{ $program->duration_details ?: '—' }}</div>
-                <div class="detail"><strong>Qualification Levels:</strong> {{ $program->qualification_levels ?: '—' }}</div>
             </div>
 
             <div class="card">
                 <h3>Entry Requirements</h3>
                 <div class="text-block">{{ $program->entry_requirements ?: 'Entry requirements will be updated by the administration.' }}</div>
-            </div>
-
-            <div class="card">
-                <h3>Modules / Course Structure</h3>
-                <div class="text-block">{{ $program->module_summary ?: 'Programme modules and structure will be updated by the administration.' }}</div>
             </div>
 
             <div class="card">
@@ -327,16 +320,6 @@
 
                 <div class="detail"><strong>Grading System:</strong></div>
                 <div class="text-block">{{ $program->grading_system ?: 'Grading system details will be updated by the administration.' }}</div>
-            </div>
-
-            <div class="card">
-                <h3>Progression</h3>
-                <div class="text-block">{{ $program->progression_details ?: 'Progression details will be updated by the administration.' }}</div>
-            </div>
-
-            <div class="card">
-                <h3>Field Practicals / Attachments</h3>
-                <div class="text-block">{{ $program->field_practicals ?: 'Field practicals or attachment details will be updated by the administration.' }}</div>
             </div>
         </div>
 
